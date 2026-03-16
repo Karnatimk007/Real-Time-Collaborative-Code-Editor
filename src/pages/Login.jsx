@@ -30,6 +30,7 @@ function Login() {
           type="email"
           placeholder="Email"
           className="p-2 border rounded"
+          required="true"
           onChange={(e)=>setEmail(e.target.value)}
         />
 
@@ -37,6 +38,7 @@ function Login() {
           type="password"
           placeholder="Password"
           className="p-2 border rounded"
+          required="true"
           onChange={(e)=>setPassword(e.target.value)}
         />
 

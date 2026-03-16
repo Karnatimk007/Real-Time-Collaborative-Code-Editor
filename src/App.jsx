@@ -25,7 +25,7 @@ function App() {
           element: <Register />
         },
         {
-          path: "codingroom",
+          path: "codingroom/:roomId",
           element: <CodingRoom />
         }
       ]

@@ -1,13 +1,25 @@
+
 import { useState } from "react";
 
 function Register() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const [name,setName] = useState("");
-  const [email,setEmail] = useState("");
-  const [password,setPassword] = useState("");
-
-  const handleRegister = (e)=>{
+  const handleRegister = (e) => {
     e.preventDefault();
+
+    // Name validation (letters and spaces only)
+    const nameRegex = /^[A-Za-z\s]+$/;
+
+    if (!nameRegex.test(name)) {
+      setError("Name should contain only letters");
+      return;
+    }
+
+
+    setError("");
 
     const userData = {
       name,
@@ -26,30 +38,44 @@ function Register() {
         className="flex flex-col gap-4 w-80 bg-gray-100 p-6 rounded"
       >
 
-        <h2 className="text-2xl font-bold text-center">Register</h2>
+        <h2 className="text-2xl font-bold text-center">
+          Register
+        </h2>
+
+        {error && (
+          <p className="text-red-500 text-sm">{error}</p>
+        )}
 
         <input
           type="text"
           placeholder="Name"
           className="p-2 border rounded"
-          onChange={(e)=>setName(e.target.value)}
+          value={name}
+          minLength={5}
+          required
+          onChange={(e) => setName(e.target.value)}
         />
 
         <input
           type="email"
           placeholder="Email"
           className="p-2 border rounded"
-          onChange={(e)=>setEmail(e.target.value)}
+          value={email}
+          required
+          onChange={(e) => setEmail(e.target.value)}
+        
         />
 
         <input
           type="password"
           placeholder="Password"
           className="p-2 border rounded"
-          onChange={(e)=>setPassword(e.target.value)}
+          value={password}
+          required
+          minLength={3}
+          onChange={(e) => setPassword(e.target.value)}
         />
-
-        <button className="bg-red-400 text-white p-2 rounded">
+<button className="bg-red-400 text-white p-2 rounded hover:bg-red-500">
           Register
         </button>
 
