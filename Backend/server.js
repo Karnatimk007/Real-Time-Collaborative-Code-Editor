@@ -106,7 +106,7 @@ socketHandler(io);
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`CORS allowed origin: ${allowedOrigin}`);
+  console.log(`CORS mode: ${isDev ? 'development (localhost:5173-5177)' : process.env.FRONTEND_URL}`);
 });
 
 // ── Global Error Handler ──────────────────────

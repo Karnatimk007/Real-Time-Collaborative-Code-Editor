@@ -3,9 +3,9 @@ import Header from "./Header";
 
 function RootLayout() {
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white flex flex-col">
+    <div className="h-screen bg-[#0f172a] text-white flex flex-col">
       <Header />
-      <main className="flex-1">
+      <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>
     </div>

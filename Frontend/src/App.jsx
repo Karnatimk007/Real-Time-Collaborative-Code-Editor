@@ -28,16 +28,16 @@ function App() {
           )
         },
 
-        // ✅ Protected Coding Room
-        {
-          path: "codingroom/:roomId",
-          element: (
-            <ProtectedRoute>
-              <CodingRoom />
-            </ProtectedRoute>
-          )
-        }
       ]
+    },
+    // ✅ Protected Coding Room (Full Screen, outside RootLayout)
+    {
+      path: "/codingroom/:roomId",
+      element: (
+        <ProtectedRoute>
+          <CodingRoom />
+        </ProtectedRoute>
+      )
     }
   ]);
 

@@ -33,10 +33,10 @@ function Register() {
   };
 
   return (
-    <div className="flex h-screen w-full">
+    <div className="flex min-h-full w-full">
 
       {/* LEFT SIDE (Design Panel) */}
-      <div className="hidden md:flex w-1/2 bg-linear-to-br from-black via-gray-900 to-purple-900 items-center justify-center p-6">
+      <div className="hidden md:flex w-1/2 bg-gradient-to-br from-black via-gray-900 to-purple-900 items-center justify-center p-6">
 
         <div className="text-white text-center max-w-md">
           <h1 className="text-4xl font-bold mb-4">

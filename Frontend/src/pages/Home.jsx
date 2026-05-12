@@ -16,7 +16,7 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white flex flex-col">
+    <div className="min-h-full bg-[#0f172a] text-white flex flex-col pb-10">
 
      
 

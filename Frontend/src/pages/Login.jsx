@@ -23,7 +23,7 @@ function Login() {
   };
 
   return (
-    <div className="flex h-screen w-full">
+    <div className="flex min-h-full w-full">
 
       {/* LEFT SIDE */}
       <div className="hidden md:flex w-1/2 bg-gradient-to-br from-black via-gray-900 to-purple-900 items-center justify-center p-6">
