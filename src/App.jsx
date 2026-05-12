@@ -4,6 +4,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CodingRoom from "./pages/CodingRoom";
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
 
@@ -12,21 +14,28 @@ function App() {
       path: "/",
       element: <RootLayout />,
       children: [
+        { path: "", element: <Home /> },
+        { path: "login", element: <Login /> },
+        { path: "register", element: <Register /> },
+
+        // ✅ Protected Dashboard
         {
-          path: "",
-          element: <Home />
+          path: "dashboard",
+          element: (
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          )
         },
-        {
-          path: "login",
-          element: <Login />
-        },
-        {
-          path: "register",
-          element: <Register />
-        },
+
+        // ✅ Protected Coding Room
         {
           path: "codingroom/:roomId",
-          element: <CodingRoom />
+          element: (
+            <ProtectedRoute>
+              <CodingRoom />
+            </ProtectedRoute>
+          )
         }
       ]
     }

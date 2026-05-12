@@ -1,13 +1,43 @@
-function Users() {
+import { useEffect, useState } from "react";
+
+function Users({ socket, roomId }) {
+
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+
+    // Receive full user list
+    socket.on("room-users", (usersList) => {
+      setUsers(usersList);
+    });
+
+    // Optional logs
+    socket.on("user-joined", ({ username }) => {
+      console.log(username + " joined");
+    });
+
+    socket.on("user-left", ({ username }) => {
+      console.log(username + " left");
+    });
+
+    return () => {
+      socket.off("room-users");
+      socket.off("user-joined");
+      socket.off("user-left");
+    };
+
+  }, [socket]);
+
   return (
     <div>
-      <h2 className="text-lg font-bold mb-3">Users</h2>
+      <h2 className="text-lg font-bold mb-2">Users</h2>
 
-      <ul className="space-y-2">
-        <li>Ritvik</li>
-        <li>User 2</li>
-        <li>User 3</li>
-      </ul>
+      {users.map((user, index) => (
+        <div key={index} className="p-2 bg-gray-700 rounded mb-1">
+          {user}
+        </div>
+      ))}
+
     </div>
   );
 }

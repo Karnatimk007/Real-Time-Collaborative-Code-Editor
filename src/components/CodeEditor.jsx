@@ -1,13 +1,48 @@
 import Editor from "@monaco-editor/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-function CodeEditor() {
+function CodeEditor({ socket, roomId }) {
+
   const [language, setLanguage] = useState("javascript");
   const [code, setCode] = useState("// Write your code here");
-  const [output, setOutput] = useState("");
 
-  const runCode = () => {
-    setOutput("Program executed successfully!");
+  // 🔥 Receive code updates
+  useEffect(() => {
+    socket.on("code-update", (newCode) => {
+      setCode(newCode);
+    });
+
+    return () => socket.off("code-update");
+  }, [socket]);
+
+  // 🔥 Receive language updates
+  useEffect(() => {
+    socket.on("language-update", (lang) => {
+      setLanguage(lang);
+    });
+
+    return () => socket.off("language-update");
+  }, [socket]);
+
+  // 🔥 Send code changes
+  const handleChange = (value) => {
+    setCode(value);
+
+    socket.emit("code-change", {
+      roomId,
+      code: value,
+    });
+  };
+
+  // 🔥 Send language change
+  const handleLanguageChange = (e) => {
+    const lang = e.target.value;
+    setLanguage(lang);
+
+    socket.emit("language-change", {
+      roomId,
+      language: lang,
+    });
   };
 
   return (
@@ -16,35 +51,26 @@ function CodeEditor() {
       {/* Top Controls */}
       <div className="flex items-center gap-4 mb-2">
         <select
+          value={language}
+          onChange={handleLanguageChange}
           className="p-2 bg-gray-700 text-white rounded"
-          onChange={(e) => setLanguage(e.target.value)}
         >
-          <option value="javascript">🟨 JavaScript</option>
+          <option value="javascript">🟨 JS</option>
           <option value="python">🐍 Python</option>
           <option value="java">☕ Java</option>
           <option value="c">💻 C</option>
         </select>
-
-        <button
-          onClick={runCode}
-          className="bg-green-500 px-4 py-2 rounded text-white"
-        >
-          Run Code
-        </button>
       </div>
 
-      {/* Monaco Editor */}
-      <Editor
-        height="60vh"
-        language={language}
-        value={code}
-        onChange={(value) => setCode(value)}
-        theme="vs-dark"
-      />
-
-      {/* Output Console */}
-      <div className="bg-black text-green-400 p-3 mt-2 h-32 rounded overflow-y-auto">
-        {output}
+      {/* 🔥 Monaco Editor */}
+      <div className="flex-1">
+        <Editor
+          height="100%"
+          language={language}
+          value={code}
+          onChange={handleChange}
+          theme="vs-dark"
+        />
       </div>
 
     </div>
