@@ -1,11 +1,8 @@
 import express from 'express';
 import { verifyToken } from '../middleware/verifyToken.js';
-import { executeCode } from '../services/executorService.js';
+import { executeCode, SUPPORTED_LANGUAGES } from '../services/executorService.js';
 
 const router = express.Router();
-
-// All languages supported by the local executor
-const SUPPORTED_LANGUAGES = ['javascript', 'python', 'cpp', 'java', 'c'];
 
 // POST /api/execute
 router.post('/', verifyToken, async (req, res) => {
@@ -32,10 +29,12 @@ router.post('/', verifyToken, async (req, res) => {
     const result = await executeCode(lang, code, stdin);
 
     res.status(200).json({
-      output: result.output,
-      status: result.status,
-      success: result.success,
+      output:   result.output,
+      status:   result.status,
+      success:  result.success,
       language: lang,
+      time:     result.time   ?? null,   // execution time in seconds (Judge0)
+      memory:   result.memory ?? null,   // memory used in KB (Judge0)
     });
   } catch (err) {
     console.error('Execute Error:', err.message);
@@ -44,7 +43,7 @@ router.post('/', verifyToken, async (req, res) => {
 });
 
 // GET /api/execute/languages
-router.get('/languages', (req, res) => {
+router.get('/languages', (_req, res) => {
   res.json({ languages: SUPPORTED_LANGUAGES });
 });
 
