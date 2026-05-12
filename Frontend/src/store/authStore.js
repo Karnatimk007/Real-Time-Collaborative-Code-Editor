@@ -1,10 +1,10 @@
-import axios from   "axios";
 import { create } from "zustand";
+import { API } from "../services/apis";
 
 export const useAuth = create((set) => ({
 
-  isAuthenticated: false,
-  currentUser: null,
+  isAuthenticated: !!localStorage.getItem("token"),
+  currentUser: JSON.parse(localStorage.getItem("user") || "null"),
   loading: false,
   error: null,
 
@@ -12,31 +12,35 @@ export const useAuth = create((set) => ({
     try {
       set({ loading: true, error: null });
 
-      //
-      const res = axios.post("http://localhost:5000/api/auth/login", userCred);
+      const res = await API.post("/auth/login", userCred);
+
+      // Persist to localStorage so refresh keeps you logged in
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
       set({
-        isAuthenticated: true, 
+        isAuthenticated: true,
         currentUser: res.data.user,
-        loading: false
+        loading: false,
       });
 
       return true;
     } catch (err) {
       set({
         error: err.response?.data?.message || "Login failed",
-        loading: false
+        loading: false,
       });
-
       return false;
     }
   },
 
   logout: () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     set({
       isAuthenticated: false,
-      currentUser: null
+      currentUser: null,
     });
-  }
+  },
 
 }));

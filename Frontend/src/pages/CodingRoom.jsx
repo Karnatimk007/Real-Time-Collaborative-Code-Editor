@@ -15,18 +15,23 @@ function CodingRoom() {
 
     const handleConnect = () => {
       console.log("Connected:", socket.id);
-
       socket.emit("join-room", {
         roomId,
-        username: currentUser?.name || "Guest",
+        username: currentUser?.username || "Guest",
       });
     };
 
     socket.on("connect", handleConnect);
 
+    // If already connected (reconnect case), emit immediately
+    if (socket.connected) {
+      handleConnect();
+    }
+
     return () => {
       socket.off("connect", handleConnect);
       socket.emit("leave-room", { roomId });
+      socket.disconnect();
     };
   }, [roomId, currentUser]);
 

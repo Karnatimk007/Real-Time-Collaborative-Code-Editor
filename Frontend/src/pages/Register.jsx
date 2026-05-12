@@ -1,30 +1,35 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { registerUser } from "../services/authServices";
 
 function Register() {
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
     const nameRegex = /^[A-Za-z\s]+$/;
-
-    if (!nameRegex.test(name)) {
+    if (!nameRegex.test(username)) {
       setError("Name should contain only letters");
       return;
     }
 
     setError("");
+    setLoading(true);
 
-    const userData = {
-      name,
-      email,
-      password
-    };
-
-    console.log(userData);
+    try {
+      await registerUser({ username, email, password });
+      navigate("/login");
+    } catch (err) {
+      setError(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -62,12 +67,12 @@ function Register() {
 
           <input
             type="text"
-            placeholder="Name"
+            placeholder="Username"
             className="p-2 border rounded bg-white/20 text-white placeholder-white outline-none"
-            value={name}
-            minLength={5}
+            value={username}
+            minLength={3}
             required
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
           />
 
           <input
@@ -89,8 +94,11 @@ function Register() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button className="bg-blue-400 text-white p-2 rounded hover:bg-blue-500">
-            Register
+          <button
+            disabled={loading}
+            className="bg-blue-400 text-white p-2 rounded hover:bg-blue-500 disabled:opacity-50"
+          >
+            {loading ? "Registering..." : "Register"}
           </button>
 
         </form>

@@ -52,7 +52,7 @@ function Header() {
 
             {/* 👤 User */}
             <span className="text-sm text-gray-400">
-              Hi, {currentUser?.name || "User"}
+              Hi, {currentUser?.username || "User"}
             </span>
 
             {/* 🚪 Logout */}

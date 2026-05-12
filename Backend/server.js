@@ -20,10 +20,21 @@ connectDB();
 const app = express();
 
 // ── CORS ─────────────────────────────────────
-const allowedOrigin = process.env.FRONTEND_URL || 'http://localhost:5173';
+const isDev = process.env.NODE_ENV !== 'production';
+const allowedOrigins = isDev
+  ? [/^http:\/\/localhost:(5173|5174|5175|5176|5177)$/]  // allow any Vite dev port
+  : [process.env.FRONTEND_URL];
+
 app.use(cors({
-  origin: allowedOrigin,
-  credentials: true,               // allow cookies to be sent
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // allow non-browser requests
+    const allowed = allowedOrigins.some((pattern) =>
+      pattern instanceof RegExp ? pattern.test(origin) : pattern === origin
+    );
+    if (allowed) return callback(null, true);
+    return callback(new Error(`CORS: ${origin} not allowed`));
+  },
+  credentials: true,
 }));
 
 // ── Global Middleware ─────────────────────────
@@ -76,7 +87,14 @@ const server = http.createServer(app);
 // ── Socket.io ─────────────────────────────────
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigin,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      const allowed = allowedOrigins.some((pattern) =>
+        pattern instanceof RegExp ? pattern.test(origin) : pattern === origin
+      );
+      if (allowed) return callback(null, true);
+      return callback(new Error(`Socket CORS: ${origin} not allowed`));
+    },
     methods: ['GET', 'POST'],
     credentials: true,
   },
