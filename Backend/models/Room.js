@@ -94,6 +94,7 @@ const RoomSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    versionKey:false
   }
 );
 
