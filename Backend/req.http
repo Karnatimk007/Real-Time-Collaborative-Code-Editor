@@ -1,0 +1,90 @@
+
+### Register User
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+    "username": "mah",
+    "email": "tt1@gmail.com",
+    "password": "123456"
+}
+
+### Login User
+# This request sets a 'token' cookie automatically in your client
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "tt1@gmail.com",
+    "password": "123456"
+}
+
+### Create Room (Uses Cookie)
+POST http://localhost:5000/api/room/create
+Content-Type: application/json
+
+{
+    "language": "cpp",
+    "maxParticipants": 10
+}
+
+
+
+### Get Room Info (Uses Cookie)
+GET http://localhost:5000/api/room/264204
+
+### Get Participants (Uses Cookie)
+GET http://localhost:5000/api/room/264204/participants
+
+### Change Language (Uses Cookie)
+PUT http://localhost:5000/api/room/264204/language
+Content-Type: application/json
+
+{
+    "language": "python"
+}
+
+### Delete Room (Uses Cookie)
+DELETE http://localhost:5000/api/room/264204
+
+### validate Roomid is valid or not
+POST http://localhost:5000/api/room/validate/264204
+Content-Type: application/json
+
+{
+    "password": "secretpassword"
+}
+
+
+
+### Execute Code (JavaScript)
+POST http://localhost:5000/api/room/execute
+Content-Type: application/json
+
+{
+    "code": "console.log('Hello !');",
+    "language": "javascript"
+}
+
+### Execute Code (Python)
+POST http://localhost:5000/api/room/execute
+Content-Type: application/json
+
+{
+    "code": "print('Python on JDoodle is live!')",
+    "language": "python"
+}
+
+### Logout User
+POST http://localhost:5000/api/auth/logout
+Content-Type: application/json
+
+
+### Get Current User
+GET http://localhost:5000/api/auth/me
+
+
+### Leave Room
+POST http://localhost:5000/api/room/55555/leave
+Content-Type: application/json
+
