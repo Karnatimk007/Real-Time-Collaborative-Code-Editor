@@ -1,70 +1,57 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../store/authStore";
+import { toast } from "sonner";
 
 function Header() {
   const { isAuthenticated, currentUser, logout } = useAuth();
 
-  return (
-    <nav className="bg-[#0f172a] border-b border-gray-800 px-6 py-3 flex justify-between items-center">
+  const handleLogout = () => {
+    logout();
+    toast.success("Logged out successfully", {
+      description: "See you again soon!",
+    });
+  };
 
+  return (
+    <nav className="navbar">
       {/* 🔷 Logo */}
-      <div className="flex items-center gap-2 text-blue-400 font-semibold text-lg cursor-pointer">
-        <span className="text-xl">{"</>"}</span>
-        <span>CodeSync</span>
+      <div className="logo">
+        <span>{"</>"}</span> CodeSync
       </div>
 
       {/* 🔗 Navigation */}
-      <div className="flex items-center gap-6 text-gray-300">
-
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            `hover:text-white transition ${isActive ? "text-white" : ""}`
-          }
-        >
+      <div className="nav-links">
+        <NavLink to="/" className="nav-link">
           Home
         </NavLink>
 
         {!isAuthenticated ? (
           <>
-            <NavLink
-              to="/login"
-              className="px-4 py-1 border border-gray-700 rounded hover:bg-gray-800 transition"
-            >
+            <NavLink to="/login" className="btn btn-outline">
               Login
             </NavLink>
 
-            <NavLink
-              to="/register"
-              className="px-4 py-1 bg-blue-500 rounded hover:bg-blue-600 transition text-white"
-            >
+            <NavLink to="/register" className="btn btn-primary">
               Register
             </NavLink>
           </>
         ) : (
           <>
-            <NavLink
-              to="/codingroom/test"
-              className="hover:text-white transition"
-            >
-              CodingRoom
+            <NavLink to="/dashboard" className="nav-link">
+              Dashboard
             </NavLink>
 
             {/* 👤 User */}
-            <span className="text-sm text-gray-400">
+            <span className="nav-link" style={{ cursor: "default" }}>
               Hi, {currentUser?.username || "User"}
             </span>
 
             {/* 🚪 Logout */}
-            <button
-              onClick={logout}
-              className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded text-sm transition text-white"
-            >
+            <button onClick={handleLogout} className="btn btn-outline" style={{ borderColor: "#ef4444", color: "#ef4444" }}>
               Logout
             </button>
           </>
         )}
-
       </div>
     </nav>
   );

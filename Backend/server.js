@@ -22,7 +22,7 @@ const app = express();
 // ── CORS ─────────────────────────────────────
 const isDev = process.env.NODE_ENV !== 'production';
 const allowedOrigins = isDev
-  ? [/^http:\/\/localhost:(5173|5174|5175|5176|5177)$/]  // allow any Vite dev port
+  ? [/^http:\/\/localhost:\d+$/, /^http:\/\/127\.0\.0\.1:\d+$/]  // allow any local dev port
   : [process.env.FRONTEND_URL];
 
 app.use(cors({

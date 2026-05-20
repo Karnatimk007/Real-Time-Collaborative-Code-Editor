@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../store/authStore";
+import { toast } from "sonner";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -18,65 +19,90 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    await login({ email, password }); // no need for success check
+    const success = await login({ email, password });
+    if (success) {
+      toast.success("Welcome back!", {
+        description: "Logged in successfully.",
+      });
+    } else {
+      toast.error("Login failed", {
+        description: "Invalid email or password.",
+      });
+    }
   };
 
   return (
-    <div className="flex min-h-full w-full">
-
+    <div className="split-layout">
       {/* LEFT SIDE */}
-      <div className="hidden md:flex w-1/2 bg-gradient-to-br from-black via-gray-900 to-purple-900 items-center justify-center p-6">
-        <div className="bg-black/40 text-green-400 p-4 rounded-lg w-full max-w-md font-mono text-sm shadow-lg">
-{`import { authenticate } from "./codesync-core";
+      <div className="split-left">
+        <div className="code-mockup card">
+          <div className="mockup-header">
+            <div className="dots">
+              <span className="dot red"></span>
+              <span className="dot yellow"></span>
+              <span className="dot green"></span>
+            </div>
+            <span className="mockup-title">auth_service.ts</span>
+          </div>
+          <div className="mockup-body">
+            <pre><code>
+<span className="keyword">import</span> {"{"} authenticate {"}"} <span className="keyword">from</span> <span className="string">"./codesync-core"</span>;
 
-async function loginUser(credentials) {
-  const { user } = await authenticate({
+<span className="keyword">async function</span> <span className="function">loginUser</span>(credentials) {"{"}
+  <span className="keyword">const</span> {"{"} user {"}"} = <span className="keyword">await</span> <span className="function">authenticate</span>({"{"}
     email: credentials.email,
-    token: "****"
-  });
+    token: <span className="string">"****"</span>
+  {"}"});
 
-  if (user) return redirect("/dashboard");
-}`}
+  <span className="keyword">if</span> (user) <span className="keyword">return</span> <span className="function">redirect</span>(<span className="string">"/dashboard"</span>);
+{"}"}
+            </code></pre>
+          </div>
         </div>
       </div>
 
       {/* RIGHT SIDE */}
-      <div className="flex w-full md:w-1/2 items-center justify-center bg-gradient-to-br from-gray-900 to-blue-900">
+      <div className="split-right">
+        <form onSubmit={handleLogin} className="form-container">
+          <div>
+            <h2 className="form-title">Welcome Back</h2>
+            <p className="form-subtitle">Enter your credentials to access your workspace</p>
+          </div>
 
-        <form
-          onSubmit={handleLogin}
-          className="flex flex-col gap-4 w-80 bg-white/10 backdrop-blur-lg p-6 rounded-xl shadow-lg border border-white/20"
-        >
+          <div>
+            <label className="form-label">Email</label>
+            <input
+              type="email"
+              placeholder="alex@company.com"
+              className="input-field"
+              required
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
 
-          <h2 className="text-2xl font-bold text-center text-white">
-            Login
-          </h2>
+          <div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <label className="form-label">Password</label>
+              <Link to="/forgot-password" style={{ color: "var(--accent-primary)", fontSize: "0.875rem" }}>Forgot password?</Link>
+            </div>
+            <input
+              type="password"
+              placeholder="••••••••"
+              className="input-field"
+              required
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
 
-          <input
-            type="email"
-            placeholder="Email"
-            className="p-2 rounded bg-white/20 text-white placeholder-white outline-none"
-            required
-            onChange={(e) => setEmail(e.target.value)}
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            className="p-2 rounded bg-white/20 text-white placeholder-white outline-none"
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
-
-          <button className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded transition">
-            Login
+          <button className="btn btn-primary" style={{ marginTop: "1rem" }}>
+            Login →
           </button>
 
+          <p style={{ textAlign: "center", marginTop: "1rem", fontSize: "0.875rem", color: "var(--text-secondary)" }}>
+            Don't have an account? <Link to="/register" style={{ color: "var(--accent-primary)" }}>Register</Link>
+          </p>
         </form>
-
       </div>
-
     </div>
   );
 }

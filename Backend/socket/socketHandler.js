@@ -79,12 +79,21 @@ const socketHandler = (io) => {
         if (!roomUsers[roomId]) roomUsers[roomId] = {};
         roomUsers[roomId][socket.id] = socket.username;
 
-        // 9. DB Update: increment activeParticipants, push participant, clear expiry
+        // 9. DB Update: increment activeParticipants, push participant, clear expiry, push system join message
+        const joinMsg = {
+          sender: 'System',
+          message: `${socket.username} joined the room`,
+          timestamp: new Date(),
+        };
+
         const updatedRoom = await Room.findOneAndUpdate(
           { roomId },
           {
             $inc: { activeParticipants: 1 },
-            $push: { participants: { username: socket.username, socketId: socket.id } },
+            $push: { 
+              participants: { username: socket.username, socketId: socket.id },
+              messages: joinMsg
+            },
             $set: { expiresAt: null, lastEmptiedAt: null },
           },
           { new: true }
@@ -105,8 +114,9 @@ const socketHandler = (io) => {
           language: updatedRoom.language,
         });
 
-        // 11. Notify others: user joined
+        // 11. Notify others: user joined & broadcast system message
         socket.to(roomId).emit('user-joined', { username: socket.username });
+        socket.to(roomId).emit('receive-message', joinMsg);
 
         // 12. Broadcast updated user list to everyone in room
         const usersInRoom = Object.values(roomUsers[roomId]);
@@ -166,7 +176,7 @@ const socketHandler = (io) => {
         // Broadcast to others
         socket.to(roomId).emit('language-update', language);
 
-        // Save to DB
+        // Save to DB (update language only)
         await Room.updateOne({ roomId }, { $set: { language } });
       } catch (err) {
         console.error('[Socket] language-change error:', err.message);
@@ -178,8 +188,8 @@ const socketHandler = (io) => {
     // Payload: { roomId, username, line, column }
     // Live cursor tracking — broadcast to others only
     // ──────────────────────────────────────────────────────────────
-    socket.on('cursor-move', ({ roomId, username, line, column }) => {
-      socket.to(roomId).emit('cursor-update', { username, line, column });
+    socket.on('cursor-move', ({ roomId, username, position }) => {
+      socket.to(roomId).emit('cursor-update', { username, position });
     });
 
     // ──────────────────────────────────────────────────────────────
@@ -259,12 +269,22 @@ async function handleLeave(socket, io, roomId, username) {
       delete roomUsers[roomId][socket.id];
     }
 
-    // DB update: decrement activeParticipants, pull participant
+    const leaveMsg = {
+      sender: 'System',
+      message: `${username || 'A participant'} left the room`,
+      timestamp: new Date(),
+    };
+
+    // Broadcast leave message to others immediately
+    socket.to(roomId).emit('receive-message', leaveMsg);
+
+    // DB update: decrement activeParticipants, pull participant, push leave system message
     const room = await Room.findOneAndUpdate(
       { roomId },
       {
         $inc: { activeParticipants: -1 },
         $pull: { participants: { socketId: socket.id } },
+        $push: { messages: leaveMsg },
       },
       { new: true }
     );

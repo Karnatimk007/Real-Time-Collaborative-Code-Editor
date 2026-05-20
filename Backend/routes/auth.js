@@ -101,4 +101,79 @@ router.get('/me', verifyToken, (req, res) => {
   }
 });
 
+// POST /api/auth/forgot-password
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: 'Email is required' });
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expires = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
+
+    user.resetPasswordOtp = otp;
+    user.resetPasswordExpires = expires;
+    await user.save();
+
+    // Send email (dynamically importing to avoid circular deps if any, or just import at top)
+    const { sendEmail } = await import('../utils/email.js');
+    const sent = await sendEmail(
+      user.email,
+      'CodeSync - Password Reset OTP',
+      `<p>Your password reset OTP is: <strong>${otp}</strong></p><p>It will expire in 15 minutes.</p>`
+    );
+
+    if (!sent) {
+      user.resetPasswordOtp = null;
+      user.resetPasswordExpires = null;
+      await user.save();
+      return res.status(500).json({ message: 'Failed to send OTP email' });
+    }
+
+    res.json({ message: 'OTP sent to email successfully' });
+  } catch (err) {
+    console.error('Forgot Password Error:', err.message);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+// POST /api/auth/reset-password
+router.post('/reset-password', async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+  
+  if (!email || !otp || !newPassword) {
+    return res.status(400).json({ message: 'Email, OTP, and new password are required' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.resetPasswordOtp !== otp || user.resetPasswordExpires < new Date()) {
+      return res.status(400).json({ message: 'Invalid or expired OTP' });
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    user.password = hashedPassword;
+    user.resetPasswordOtp = null;
+    user.resetPasswordExpires = null;
+    await user.save();
+
+    res.json({ message: 'Password reset successfully' });
+  } catch (err) {
+    console.error('Reset Password Error:', err.message);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
 export default router;

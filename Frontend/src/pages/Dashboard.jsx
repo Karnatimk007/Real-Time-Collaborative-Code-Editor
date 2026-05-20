@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { createRoom, validateRoom } from "../services/authServices";
+import { toast } from "sonner";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -10,73 +11,92 @@ function Dashboard() {
   const [joining, setJoining] = useState(false);
   const [error, setError] = useState("");
 
-  // ── Create a real room via backend ────────────────────────────────
   const createNewRoom = async () => {
     setError("");
     setCreating(true);
     try {
-      const res = await createRoom({ language: "javascript", maxParticipants: 5 });
-      navigate(`/codingroom/${res.data.roomId}`);
+      const res = await createRoom({ language: "javascript", maxParticipants: 5, password: password || undefined });
+      toast.success("Room created successfully", {
+        description: `Room ID: ${res.data.roomId}`,
+      });
+      navigate(`/codingroom/${res.data.roomId}`, { state: { password } });
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to create room");
+      const errorMsg = err.response?.data?.message || "Failed to create room";
+      setError(errorMsg);
+      toast.error("Failed to create room", {
+        description: errorMsg,
+      });
     } finally {
       setCreating(false);
     }
   };
 
-  // ── Validate then join room ───────────────────────────────────────
   const joinRoom = async () => {
     if (!roomId.trim()) return;
     setError("");
     setJoining(true);
     try {
       await validateRoom(roomId.trim(), { password: password || undefined });
-      navigate(`/codingroom/${roomId.trim()}`);
+      toast.success("Joined room successfully", {
+        description: "Connected to collaborative session.",
+      });
+      navigate(`/codingroom/${roomId.trim()}`, { state: { password } });
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to join room");
+      const errorMsg = err.response?.data?.message || "Failed to join room";
+      setError(errorMsg);
+      toast.error("Failed to join room", {
+        description: errorMsg,
+      });
     } finally {
       setJoining(false);
     }
   };
 
   return (
-    <div className="min-h-full bg-[#0f172a] text-white p-6">
-
-      {/* Title */}
-      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+    <div className="container" style={{ padding: "3rem 2rem", flex: 1 }}>
+      <h1 style={{ fontSize: "2rem", fontWeight: 700, marginBottom: "2rem" }}>Dashboard</h1>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-900/50 border border-red-500 text-red-300 rounded-lg text-sm">
+        <div style={{ padding: "1rem", backgroundColor: "rgba(239, 68, 68, 0.1)", border: "1px solid #ef4444", color: "#fca5a5", borderRadius: "8px", marginBottom: "2rem" }}>
           {error}
         </div>
       )}
 
-      {/* Quick Actions */}
-      <div className="grid md:grid-cols-2 gap-6 mb-10">
-
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "2rem", marginBottom: "3rem" }}>
         {/* Create Room */}
-        <div className="bg-gray-900 p-6 rounded-xl border border-gray-700">
-          <h2 className="text-lg mb-2 font-semibold">Create Room</h2>
-          <p className="text-gray-400 text-sm mb-4">Start a new collaborative session</p>
+        <div className="card">
+          <h2 style={{ fontSize: "1.25rem", fontWeight: 600, marginBottom: "0.5rem" }}>Create New Room</h2>
+          <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", marginBottom: "1.5rem" }}>Start a new collaborative session</p>
+
+          <input
+            type="password"
+            placeholder="Password (if protected)"
+            className="input-field"
+            style={{ marginBottom: "1rem" }}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
           <button
             onClick={createNewRoom}
             disabled={creating}
-            className="w-full bg-purple-500 hover:bg-purple-600 disabled:opacity-50 p-3 rounded-lg transition"
+            className="btn btn-primary"
+            style={{ width: "100%" }}
           >
-            {creating ? "Creating..." : "Create New Room"}
+            {creating ? "Creating..." : "Create Room →"}
           </button>
         </div>
 
         {/* Join Room */}
-        <div className="bg-gray-900 p-6 rounded-xl border border-gray-700">
-          <h2 className="text-lg mb-2 font-semibold">Join Room</h2>
-          <p className="text-gray-400 text-sm mb-4">Enter a 6-digit room ID to join</p>
+        <div className="card">
+          <h2 style={{ fontSize: "1.25rem", fontWeight: 600, marginBottom: "0.5rem" }}>Join Existing Room</h2>
+          <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", marginBottom: "1.5rem" }}>Enter a 6-digit room ID to join</p>
 
           <input
             type="text"
             placeholder="Room ID (6 digits)"
-            className="w-full p-3 mb-3 rounded bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="input-field"
+            style={{ marginBottom: "1rem" }}
             value={roomId}
             maxLength={6}
             onChange={(e) => setRoomId(e.target.value)}
@@ -85,7 +105,8 @@ function Dashboard() {
           <input
             type="password"
             placeholder="Password (if protected)"
-            className="w-full p-3 mb-4 rounded bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="input-field"
+            style={{ marginBottom: "1rem" }}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -93,14 +114,13 @@ function Dashboard() {
           <button
             onClick={joinRoom}
             disabled={joining}
-            className="w-full bg-blue-500 hover:bg-blue-600 disabled:opacity-50 p-3 rounded-lg transition"
+            className="btn btn-outline"
+            style={{ width: "100%" }}
           >
             {joining ? "Joining..." : "Join Room"}
           </button>
         </div>
-
       </div>
-
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { registerUser } from "../services/authServices";
+import { toast } from "sonner";
 
 function Register() {
   const [username, setUsername] = useState("");
@@ -16,6 +17,9 @@ function Register() {
     const nameRegex = /^[A-Za-z\s]+$/;
     if (!nameRegex.test(username)) {
       setError("Name should contain only letters");
+      toast.error("Invalid username", {
+        description: "Name should contain only letters.",
+      });
       return;
     }
 
@@ -24,89 +28,131 @@ function Register() {
 
     try {
       await registerUser({ username, email, password });
+      toast.success("Account created successfully!", {
+        description: "Please login with your credentials.",
+      });
       navigate("/login");
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
+      const errorMsg = err.response?.data?.message || "Registration failed";
+      setError(errorMsg);
+      toast.error("Registration failed", {
+        description: errorMsg,
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-full w-full">
+    <div className="split-layout">
+      {/* LEFT SIDE */}
+      <div className="split-left">
+        <div className="code-mockup card">
+          <div className="mockup-header">
+            <div className="dots">
+              <span className="dot red"></span>
+              <span className="dot yellow"></span>
+              <span className="dot green"></span>
+            </div>
+            <span className="mockup-title">create_account.js</span>
+          </div>
+          <div className="mockup-body">
+            <pre><code>
+<span className="keyword">import</span> {"{"} CodeSync {"}"} <span className="keyword">from</span> <span className="string">'@codesync/core'</span>;
 
-      {/* LEFT SIDE (Design Panel) */}
-      <div className="hidden md:flex w-1/2 bg-gradient-to-br from-black via-gray-900 to-purple-900 items-center justify-center p-6">
+<span className="keyword">const</span> session <span className="operator">=</span> <span className="keyword">await</span> CodeSync.<span className="function">createSession</span>({"{"}
+  projectId: <span className="string">'global-collab'</span>,
+  features: [<span className="string">'pair-programming'</span>, <span className="string">'live-chat'</span>]
+{"}"});
 
-        <div className="text-white text-center max-w-md">
-          <h1 className="text-4xl font-bold mb-4">
-            CodeSync
-          </h1>
-          <p className="text-gray-400">
-            Build, collaborate and code in real-time with your team.
-          </p>
+session.<span className="function">on</span>(<span className="string">'userJoin'</span>, (user) <span className="operator">=&gt;</span> {"{"}
+  <span className="object">console</span>.<span className="function">log</span>(<span className="string">`User `</span> + user.name + <span className="string">` joined`</span>);
+{"}"});
+            </code></pre>
+          </div>
         </div>
-
       </div>
 
-      {/* RIGHT SIDE (Form) */}
-      <div className="flex w-full md:w-1/2 items-center justify-center bg-black">
-
-        <form
-          onSubmit={handleRegister}
-          className="flex flex-col gap-4 w-80 bg-white/10 backdrop-blur-lg p-6 rounded-xl shadow-lg border border-white/20"
-        >
-
-          <h2 className="text-2xl font-bold text-center text-white">
-            Register
-          </h2>
+      {/* RIGHT SIDE */}
+      <div className="split-right">
+        <form onSubmit={handleRegister} className="form-container">
+          <div>
+            <h2 className="form-title">Create Account</h2>
+            <p className="form-subtitle">Start your journey with the world's best coding community.</p>
+          </div>
 
           {error && (
-            <p className="text-red-500 text-sm">{error}</p>
+            <div style={{ color: "#ef4444", fontSize: "0.875rem", marginBottom: "0.5rem" }}>
+              {error}
+            </div>
           )}
 
-          <input
-            type="text"
-            placeholder="Username"
-            className="p-2 border rounded bg-white/20 text-white placeholder-white outline-none"
-            value={username}
-            minLength={3}
-            required
-            onChange={(e) => setUsername(e.target.value)}
-          />
+          <div>
+            <label className="form-label">Username</label>
+            <input
+              type="text"
+              placeholder="johndoe"
+              className="input-field"
+              value={username}
+              minLength={3}
+              required
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
 
-          <input
-            type="email"
-            placeholder="Email"
-            className="p-2 border rounded bg-white/20 text-white placeholder-white outline-none"
-            value={email}
-            required
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <div>
+            <label className="form-label">Email Address</label>
+            <input
+              type="email"
+              placeholder="name@company.com"
+              className="input-field"
+              value={email}
+              required
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
 
-          <input
-            type="password"
-            placeholder="Password"
-            className="p-2 border rounded bg-white/20 text-white placeholder-white outline-none"
-            value={password}
-            required
-            minLength={3}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div>
+            <label className="form-label">Password</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              className="input-field"
+              value={password}
+              required
+              minLength={3}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
 
-          <button
-            disabled={loading}
-            className="bg-blue-400 text-white p-2 rounded hover:bg-blue-500 disabled:opacity-50"
-          >
-            {loading ? "Registering..." : "Register"}
+          <div>
+            <label className="form-label">Confirm Password</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginTop: "0.5rem" }}>
+            <input type="checkbox" required />
+            <span style={{ fontSize: "0.875rem", color: "var(--text-secondary)" }}>
+              I agree to the <span style={{ color: "var(--accent-primary)" }}>Terms of Service</span> and <span style={{ color: "var(--accent-primary)" }}>Privacy Policy</span>.
+            </span>
+          </div>
+
+          <button disabled={loading} className="btn btn-primary" style={{ marginTop: "0.5rem" }}>
+            {loading ? "Registering..." : "Create Account →"}
           </button>
 
+          <p style={{ textAlign: "center", marginTop: "1rem", fontSize: "0.875rem", color: "var(--text-secondary)" }}>
+            Already have an account? <Link to="/login" style={{ color: "var(--accent-primary)" }}>Login</Link>
+          </p>
         </form>
-
       </div>
-
     </div>
   );
 }
 
-export default Register
+export default Register;
