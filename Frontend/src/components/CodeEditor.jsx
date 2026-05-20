@@ -186,16 +186,14 @@ function CodeEditor({ socket, roomId, onCodeChange, onLangChange, defaultCodes, 
           onChange={handleLanguageChange}
           className="px-3 py-1.5 bg-cyber-900 border border-cyber-600 text-gray-200 text-sm rounded-lg outline-none hover:border-neon-purple transition-colors"
         >
-          <option value="javascript">🟨 JavaScript</option>
-          <option value="python">🐍 Python</option>
-          <option value="java">☕ Java</option>
-          <option value="c">💻 C</option>
-          <option value="cpp">⚙️ C++</option>
-          <option value="go">🐹 Go</option>
+          <option value="javascript"> JavaScript</option>
+          <option value="python">Python</option>
+          <option value="java"> Java</option>
+          <option value="c"> C</option>
+          <option value="cpp">C++</option>
+          <option value="go"> Go</option>
         </select>
-        <span className="text-xs text-cyber-500 font-mono">
-          {language}
-        </span>
+
       </div>
 
       {/*  Monaco Editor */}

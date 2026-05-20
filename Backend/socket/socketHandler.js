@@ -79,20 +79,13 @@ const socketHandler = (io) => {
         if (!roomUsers[roomId]) roomUsers[roomId] = {};
         roomUsers[roomId][socket.id] = socket.username;
 
-        // 9. DB Update: increment activeParticipants, push participant, clear expiry, push system join message
-        const joinMsg = {
-          sender: 'System',
-          message: `${socket.username} joined the room`,
-          timestamp: new Date(),
-        };
-
+        // 9. DB Update: increment activeParticipants, push participant, clear expiry
         const updatedRoom = await Room.findOneAndUpdate(
           { roomId },
           {
             $inc: { activeParticipants: 1 },
             $push: { 
-              participants: { username: socket.username, socketId: socket.id },
-              messages: joinMsg
+              participants: { username: socket.username, socketId: socket.id }
             },
             $set: { expiresAt: null, lastEmptiedAt: null },
           },
@@ -114,9 +107,8 @@ const socketHandler = (io) => {
           language: updatedRoom.language,
         });
 
-        // 11. Notify others: user joined & broadcast system message
+        // 11. Notify others: user joined
         socket.to(roomId).emit('user-joined', { username: socket.username });
-        socket.to(roomId).emit('receive-message', joinMsg);
 
         // 12. Broadcast updated user list to everyone in room
         const usersInRoom = Object.values(roomUsers[roomId]);
@@ -269,22 +261,12 @@ async function handleLeave(socket, io, roomId, username) {
       delete roomUsers[roomId][socket.id];
     }
 
-    const leaveMsg = {
-      sender: 'System',
-      message: `${username || 'A participant'} left the room`,
-      timestamp: new Date(),
-    };
-
-    // Broadcast leave message to others immediately
-    socket.to(roomId).emit('receive-message', leaveMsg);
-
-    // DB update: decrement activeParticipants, pull participant, push leave system message
+    // DB update: decrement activeParticipants, pull participant
     const room = await Room.findOneAndUpdate(
       { roomId },
       {
         $inc: { activeParticipants: -1 },
-        $pull: { participants: { socketId: socket.id } },
-        $push: { messages: leaveMsg },
+        $pull: { participants: { socketId: socket.id } }
       },
       { new: true }
     );

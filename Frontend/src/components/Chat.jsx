@@ -100,25 +100,10 @@ function Chat({ socket, roomId, initialMessages = [] }) {
           </div>
         )}
         <AnimatePresence>
-          {messages.map((msg, index) => {
-            const isSystem = msg.sender === "System" || msg.sender === "system";
-            const isMe = msg.sender === currentUser?.username;
-
-            if (isSystem) {
-              return (
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  key={index}
-                  className="flex justify-center w-full my-2"
-                >
-                  <div className="px-4 py-1.5 bg-cyber-800/40 border border-cyber-700/50 rounded-full text-xs text-cyber-400 font-mono tracking-wide shadow-inner flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-neon-purple shadow-[0_0_6px_rgba(198,120,221,0.8)] animate-pulse"></span>
-                    {msg.message}
-                  </div>
-                </motion.div>
-              );
-            }
+          {messages
+            .filter((msg) => msg.sender !== "System" && msg.sender !== "system")
+            .map((msg, index) => {
+              const isMe = msg.sender === currentUser?.username;
 
             return (
               <motion.div 

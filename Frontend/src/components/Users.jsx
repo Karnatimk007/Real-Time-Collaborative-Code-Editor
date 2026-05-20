@@ -1,7 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Circle } from "lucide-react";
+import { useAuth } from "../store/authStore";
 
 function Users({ users = [] }) {
+  const { currentUser } = useAuth();
   return (
     <div className="flex flex-col h-full bg-cyber-900">
       <div className="p-4 border-b border-cyber-700 flex justify-between items-center bg-cyber-800/50 backdrop-blur-sm z-10">
@@ -26,7 +28,7 @@ function Users({ users = [] }) {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-gray-200 text-sm font-medium truncate">
-                  {user}
+                  {user === currentUser?.username ? "You" : user}
                 </p>
                 <p className="text-[10px] text-cyber-500 flex items-center gap-1 mt-0.5">
                   <Circle size={8} fill="currentColor" className="text-neon-green" />
