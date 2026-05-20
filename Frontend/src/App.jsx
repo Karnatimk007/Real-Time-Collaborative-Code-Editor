@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import CodingRoom from "./pages/CodingRoom";
 import Dashboard from "./pages/Dashboard";
+import JoinRoom from "./pages/JoinRoom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Toaster } from "sonner";
 
@@ -39,6 +40,15 @@ function App() {
       element: (
         <ProtectedRoute>
           <CodingRoom />
+        </ProtectedRoute>
+      )
+    },
+    // ✅ Public Join Room Page (for invite links)
+    {
+      path: "/join-room/:roomId",
+      element: (
+        <ProtectedRoute>
+          <JoinRoom />
         </ProtectedRoute>
       )
     }

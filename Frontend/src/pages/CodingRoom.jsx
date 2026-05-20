@@ -22,6 +22,8 @@ import {
   ChevronUp,
   Wifi,
   WifiOff,
+  Share2,
+  Link2,
 } from "lucide-react";
 
 // ── Language default snippets ──────────────────────────────────────
@@ -172,6 +174,20 @@ export default function CodingRoom() {
     setTimeout(() => setCopied(false), 2000);
   }, [roomId]);
 
+  // ── Generate invite link ──────────────────────────────────────
+  const getInviteLink = useCallback(() => {
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/join-room/${roomId}`;
+  }, [roomId]);
+
+  const copyInviteLink = useCallback(() => {
+    const link = getInviteLink();
+    navigator.clipboard.writeText(link);
+    toast.success("Invite link copied!", {
+      description: "Share this link with others to join the room.",
+    });
+  }, [getInviteLink]);
+
   // ── Leave room ────────────────────────────────────────────────────
   const handleLeave = useCallback(() => {
     toast.success("You left the room", {
@@ -305,8 +321,19 @@ export default function CodingRoom() {
           )}
         </div>
 
-        {/* Right: Run + Leave */}
+        {/* Right: Invite + Run + Leave */}
         <div className="flex items-center gap-2">
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={copyInviteLink}
+            title="Copy invite link"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-cyber-700 hover:bg-neon-blue/20 border border-cyber-600 hover:border-neon-blue/50 text-gray-300 hover:text-neon-blue text-sm rounded-lg transition-all"
+          >
+            <Share2 size={14} />
+            <span className="hidden sm:block">Invite</span>
+          </motion.button>
+
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
@@ -469,7 +496,7 @@ export default function CodingRoom() {
               <Chat socket={socket} roomId={roomId} initialMessages={initialMessages} />
             </div>
             <div className={`absolute inset-0 ${activeTab === TABS.USERS ? 'block' : 'hidden'}`}>
-              <Users users={roomUsers} />
+              <Users users={roomUsers} roomId={roomId} />
             </div>
           </div>
         </div>
