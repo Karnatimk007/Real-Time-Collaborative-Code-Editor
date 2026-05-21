@@ -73,7 +73,7 @@ const socketHandler = (io) => {
         socket.username = username.trim();
 
         // 7. Join socket room
-        socket.join(roomId);
+        await socket.join(roomId);
 
         // 8. Add to in-memory store
         if (!roomUsers[roomId]) roomUsers[roomId] = {};
@@ -236,7 +236,7 @@ const socketHandler = (io) => {
     // ──────────────────────────────────────────────────────────────
     socket.on('leave-room', async ({ roomId, username }) => {
       await handleLeave(socket, io, roomId, username);
-      socket.leave(roomId);
+      await socket.leave(roomId);
     });
 
     // ──────────────────────────────────────────────────────────────

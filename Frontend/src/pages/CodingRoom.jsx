@@ -74,17 +74,17 @@ export default function CodingRoom() {
       return;
     }
 
-    // Connect socket
-    socket.connect();
-
-    socket.on("connect", () => {
+    const handleConnect = () => {
       setConnected(true);
       socket.emit("join-room", {
         roomId,
         username: currentUser.username,
         password,
       });
-    });
+    };
+
+    // Register listener before connecting to prevent race conditions
+    socket.on("connect", handleConnect);
 
     socket.on("connect_error", () => {
       setConnected(false);
@@ -93,6 +93,13 @@ export default function CodingRoom() {
     });
 
     socket.on("disconnect", () => setConnected(false));
+
+    // Connect or trigger joining if already connected
+    if (socket.connected) {
+      handleConnect();
+    } else {
+      socket.connect();
+    }
 
     // Room joined successfully — server sends load-code & room-info
     socket.on("load-code", ({ code, language }) => {
