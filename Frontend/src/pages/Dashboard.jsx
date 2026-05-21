@@ -130,7 +130,6 @@ function Dashboard() {
             placeholder="Password (if protected)"
             className="input-field"
             style={{ marginBottom: "1rem" }}
-            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
 
