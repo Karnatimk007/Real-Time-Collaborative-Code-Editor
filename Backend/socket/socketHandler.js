@@ -283,13 +283,14 @@ async function handleLeave(socket, io, roomId, username) {
     const updatedUsers = Object.values(roomUsers[roomId] || {});
     io.to(roomId).emit('room-users', updatedUsers);
 
-    // If room is now empty → set 30-minute expiry grace period
+    // If room is now empty → set expiry based on roomDuration
     if (room.activeParticipants <= 0) {
+      const gracePeriodMinutes = room.roomDuration || 30;
       await Room.updateOne(
         { roomId },
         {
           $set: {
-            expiresAt: new Date(Date.now() + 30 * 60 * 1000),
+            expiresAt: new Date(Date.now() + gracePeriodMinutes * 60 * 1000),
             lastEmptiedAt: new Date(),
             activeParticipants: 0,
           },
@@ -297,7 +298,7 @@ async function handleLeave(socket, io, roomId, username) {
       );
       // Clean up in-memory store for this room
       delete roomUsers[roomId];
-      console.log(`[Socket] Room ${roomId} is empty — scheduled for deletion in 30 min`);
+      console.log(`[Socket] Room ${roomId} is empty — scheduled for deletion in ${gracePeriodMinutes} min`);
     }
 
     console.log(`[Socket] ${username} left room ${roomId}`);

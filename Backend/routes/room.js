@@ -15,6 +15,7 @@ router.post('/create', verifyToken, async (req, res) => {
     maxParticipants = 5,
     password = null,
     expiresInHours = 24,   // optional- room lifetime in hours (default 24h)
+    roomDuration = 30,     // optional- how long (in minutes) room stays after all users leave (default 30 min)
   } = req.body;
 
   try {
@@ -36,6 +37,7 @@ router.post('/create', verifyToken, async (req, res) => {
       isProtected,
       createdBy: req.user.username,
       expiresAt,
+      roomDuration,
     });
 
     await newRoom.save();
@@ -47,6 +49,7 @@ router.post('/create', verifyToken, async (req, res) => {
       maxParticipants,
       isProtected,
       expiresAt,
+      roomDuration,
     });
   } catch (err) {
     console.error('Create Room Error:', err.message);

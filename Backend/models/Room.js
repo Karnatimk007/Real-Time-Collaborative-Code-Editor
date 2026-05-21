@@ -81,6 +81,13 @@ const RoomSchema = new mongoose.Schema(
       type:    Date,
       default: null,
     },
+    roomDuration: {
+      type:    Number,
+      default: 30,
+      min:     [5, "Minimum room duration is 5 minutes"],
+      max:     [1440, "Maximum room duration is 24 hours (1440 minutes)"],
+      description: "How long (in minutes) room stays after all users leave"
+    },
 
     // Password Protection ────────────────────
     isProtected: {        

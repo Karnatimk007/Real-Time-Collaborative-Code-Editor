@@ -7,6 +7,7 @@ function Dashboard() {
   const navigate = useNavigate();
   const [roomId, setRoomId] = useState("");
   const [password, setPassword] = useState("");
+  const [roomDuration, setRoomDuration] = useState(30);
   const [creating, setCreating] = useState(false);
   const [joining, setJoining] = useState(false);
   const [error, setError] = useState("");
@@ -15,7 +16,12 @@ function Dashboard() {
     setError("");
     setCreating(true);
     try {
-      const res = await createRoom({ language: "javascript", maxParticipants: 5, password: password || undefined });
+      const res = await createRoom({ 
+        language: "javascript", 
+        maxParticipants: 5, 
+        password: password || undefined,
+        roomDuration: parseInt(roomDuration),
+      });
       toast.success("Room created successfully", {
         description: `Room ID: ${res.data.roomId}`,
       });
@@ -67,6 +73,23 @@ function Dashboard() {
         <div className="card">
           <h2 style={{ fontSize: "1.25rem", fontWeight: 600, marginBottom: "0.5rem" }}>Create New Room</h2>
           <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", marginBottom: "1.5rem" }}>Start a new collaborative session</p>
+
+          <label style={{ display: "block", fontSize: "0.875rem", color: "var(--text-secondary)", marginBottom: "0.5rem" }}>
+            Room Duration (minutes)
+          </label>
+          <input
+            type="number"
+            placeholder="Room duration in minutes"
+            className="input-field"
+            style={{ marginBottom: "1rem" }}
+            value={roomDuration}
+            onChange={(e) => setRoomDuration(Math.max(5, Math.min(1440, parseInt(e.target.value) || 30)))}
+            min="5"
+            max="1440"
+          />
+          <small style={{ display: "block", color: "var(--text-secondary)", marginBottom: "1rem" }}>
+            Room will be deleted {roomDuration} minutes after all users leave (5-1440 min)
+          </small>
 
           <input
             type="password"
