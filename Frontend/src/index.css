@@ -262,9 +262,12 @@ input, select, textarea {
   padding: 0;
   overflow: hidden;
   text-align: left;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 .mockup-header {
-  background: #11141a;
+  background: var(--bg-secondary);
   padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
@@ -290,29 +293,46 @@ input, select, textarea {
 }
 .mockup-body {
   padding: 1.5rem;
-  background: #0d1117;
+  background: var(--bg-main);
   font-family: var(--font-mono);
   font-size: 0.9rem;
+  overflow-x: auto;
 }
-.keyword { color: #ff7b72; }
-.string { color: #a5d6ff; }
-.function { color: #d2a8ff; }
-.operator { color: #79c0ff; }
-.object { color: #79c0ff; }
+.keyword { color: #ff75b5; }   /* Neon Pink */
+.string { color: #f9f871; }    /* Neon Yellow */
+.function { color: #00e5ff; }  /* Neon Cyan */
+.operator { color: #a25afa; }  /* Neon Purple */
+.object { color: #e2e8f0; }    /* Light Gray */
+
+/* Home Mockup Wrapper */
+.home-mockup-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 3.5rem;
+  padding: 0 1rem;
+}
 
 /* Split Layout */
 .split-layout {
   display: flex;
-  min-height: 100vh;
+  min-height: 550px;
   width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
+  margin: 2rem 0;
 }
 .split-left {
   display: none;
   width: 50%;
-  background: linear-gradient(135deg, #0f172a 0%, #312e81 100%);
+  background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-card) 100%);
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 2.5rem;
+  border-right: 1px solid var(--border-color);
 }
 @media (min-width: 768px) {
   .split-left {
@@ -324,7 +344,8 @@ input, select, textarea {
   width: 100%;
   align-items: center;
   justify-content: center;
-  background-color: var(--bg-main);
+  background-color: var(--bg-secondary);
+  padding: 2.5rem;
 }
 @media (min-width: 768px) {
   .split-right {
@@ -342,6 +363,14 @@ input, select, textarea {
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-lg);
+}
+
+/* Eliminate double borders/cards in split layout */
+.split-right .form-container {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
 }
 .form-title {
   font-size: 1.75rem;

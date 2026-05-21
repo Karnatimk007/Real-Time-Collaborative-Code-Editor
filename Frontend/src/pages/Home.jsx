@@ -15,8 +15,8 @@ function Home() {
           Real-time collaborative code editor for developers. Sync, share,
           and ship your projects from anywhere in the world.
         </p>
-         <div className="split-left">
-        <div className="code-mockup card">
+      <div className="home-mockup-wrapper">
+        <div className="code-mockup">
           <div className="mockup-header">
             <div className="dots">
               <span className="dot red"></span>

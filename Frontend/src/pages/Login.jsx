@@ -35,7 +35,7 @@ function Login() {
     <div className="split-layout">
       {/* LEFT SIDE */}
   <div className="split-left">
-        <div className="code-mockup card">
+        <div className="code-mockup">
           <div className="mockup-header">
             <div className="dots">
               <span className="dot red"></span>
