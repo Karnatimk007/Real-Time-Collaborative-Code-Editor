@@ -89,7 +89,7 @@ const socketHandler = (io) => {
             },
             $set: { expiresAt: null, lastEmptiedAt: null },
           },
-          { new: true }
+          { returnDocument: 'after' }
         );
 
         // 10. Send existing state to the joining user
@@ -271,7 +271,7 @@ async function handleLeave(socket, io, roomId, username) {
         $inc: { activeParticipants: -1 },
         $pull: { participants: { socketId: socket.id } }
       },
-      { new: true }
+      { returnDocument: 'after' }
     );
 
     if (!room) return;
