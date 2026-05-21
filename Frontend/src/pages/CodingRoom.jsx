@@ -301,7 +301,7 @@ export default function CodingRoom() {
 
           {roomInfo && (
             <span className="hidden md:block text-xs text-gray-500">
-              {roomInfo.activeParticipants}/{roomInfo.maxParticipants} participants
+              {roomUsers.length}/{20} participants
             </span>
           )}
         </div>

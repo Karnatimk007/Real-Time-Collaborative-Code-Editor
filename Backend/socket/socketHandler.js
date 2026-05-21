@@ -128,8 +128,11 @@ const socketHandler = (io) => {
     // ──────────────────────────────────────────────────────────────
     socket.on('code-change', ({ roomId, code }) => {
       try {
-        // Broadcast to others immediately (no await needed)
-        socket.to(roomId).emit('code-update', code);
+        // Broadcast to others with username info
+        socket.to(roomId).emit('code-update', { 
+          code, 
+          username: socket.username 
+        });
 
         // Debounced DB save (1s after last keystroke)
         debounceCodeSave(roomId, code);

@@ -97,8 +97,8 @@ function Dashboard() {
             placeholder="Room ID (6 digits)"
             className="input-field"
             style={{ marginBottom: "1rem" }}
-            value={roomId}
             maxLength={6}
+            value={roomId}
             onChange={(e) => setRoomId(e.target.value)}
           />
 

@@ -7,6 +7,8 @@ function CodeEditor({ socket, roomId, onCodeChange, onLangChange, defaultCodes, 
 
   const [language, setLanguage] = useState(initialLanguage || "javascript");
   const [code, setCode] = useState(initialCode || "// Write your code here");
+  const [editingUser, setEditingUser] = useState(null);
+  const editingTimerRef = useRef(null);
 
   // Keep a map of code written per language using useRef to prevent redundant state updates
   const languageCodeMapRef = useRef({
@@ -23,10 +25,25 @@ function CodeEditor({ socket, roomId, onCodeChange, onLangChange, defaultCodes, 
 
   // Receive code + initial load from server
   useEffect(() => {
-    const handleCodeUpdate = (newCode) => {
+    const handleCodeUpdate = (data) => {
+      // Handle both old format (just code string) and new format (object with code and username)
+      const newCode = typeof data === 'string' ? data : data?.code || data;
+      const username = typeof data === 'object' ? data?.username : null;
+
       setCode(newCode);
       onCodeChange?.(newCode);
       languageCodeMapRef.current[currentLanguageRef.current] = newCode;
+
+      // Show editing user
+      if (username && username !== currentUser?.username) {
+        setEditingUser(username);
+        
+        // Clear the editing indicator after 2 seconds of inactivity
+        clearTimeout(editingTimerRef.current);
+        editingTimerRef.current = setTimeout(() => {
+          setEditingUser(null);
+        }, 2000);
+      }
     };
     const handleLoadCode = ({ code: loadedCode, language: loadedLang }) => {
       const finalCode = loadedCode || (defaultCodes && defaultCodes[loadedLang]) || "// Write your code here";
@@ -45,6 +62,7 @@ function CodeEditor({ socket, roomId, onCodeChange, onLangChange, defaultCodes, 
     return () => {
       socket.off("code-update", handleCodeUpdate);
       socket.off("load-code", handleLoadCode);
+      clearTimeout(editingTimerRef.current);
     };
   }, [socket, onCodeChange, onLangChange, defaultCodes]);
 
@@ -70,7 +88,11 @@ function CodeEditor({ socket, roomId, onCodeChange, onLangChange, defaultCodes, 
   const handleChange = (value) => {
     setCode(value);
     onCodeChange?.(value);
-    socket.emit("code-change", { roomId, code: value });
+    socket.emit("code-change", { 
+      roomId, 
+      code: value,
+      username: currentUser?.username
+    });
     languageCodeMapRef.current[currentLanguageRef.current] = value;
   };
 
@@ -92,7 +114,11 @@ function CodeEditor({ socket, roomId, onCodeChange, onLangChange, defaultCodes, 
     const restoredCode = languageCodeMapRef.current[lang] || (defaultCodes && defaultCodes[lang]) || "// Write your code here";
     setCode(restoredCode);
     onCodeChange?.(restoredCode);
-    socket.emit("code-change", { roomId, code: restoredCode });
+    socket.emit("code-change", { 
+      roomId, 
+      code: restoredCode,
+      username: currentUser?.username
+    });
 
     toast.success(`Language changed to ${lang.toUpperCase()}`);
   };
@@ -180,7 +206,7 @@ function CodeEditor({ socket, roomId, onCodeChange, onLangChange, defaultCodes, 
   return (
     <div className="flex flex-col h-full">
       {/* Top Controls */}
-      <div className="flex items-center gap-4 px-3 py-2 bg-cyber-800 border-b border-cyber-700">
+      <div className="flex items-center justify-between gap-4 px-3 py-2 bg-cyber-800 border-b border-cyber-700">
         <select
           value={language}
           onChange={handleLanguageChange}
@@ -194,6 +220,13 @@ function CodeEditor({ socket, roomId, onCodeChange, onLangChange, defaultCodes, 
           <option value="go"> Go</option>
         </select>
 
+        {/* Editing User Indicator */}
+        {editingUser && (
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-neon-purple/10 border border-neon-purple/30 text-neon-purple text-xs rounded-lg font-medium">
+            <span className="w-2 h-2 rounded-full bg-neon-purple animate-pulse"></span>
+            {editingUser} is editing...
+          </div>
+        )}
       </div>
 
       {/*  Monaco Editor */}
