@@ -18,7 +18,7 @@ dotenv.config();
 connectDB();
 
 const app = express();
-
+app.set('trust proxy', 1);
 // ── CORS ─────────────────────────────────────
 const isDev = process.env.NODE_ENV !== 'production';
 const allowedOrigins = isDev
