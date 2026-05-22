@@ -12,8 +12,9 @@ const LANGUAGE_IDS = {
 };
 
 // ── Config ────────────────────────────────────────────────────────────────────
-const JDOODLE_CLIENT_ID     = process.env.JDOODLE_CLIENT_ID     || 'YOUR_CLIENT_ID';
-const JDOODLE_CLIENT_SECRET = process.env.JDOODLE_CLIENT_SECRET || 'YOUR_CLIENT_SECRET';
+const JDOODLE_CLIENT_ID     = process.env.JDOODLE_CLIENT_ID     || '';
+const JDOODLE_CLIENT_SECRET = process.env.JDOODLE_CLIENT_SECRET || '';
+const HAS_JDOODLE_CREDS = Boolean(JDOODLE_CLIENT_ID && JDOODLE_CLIENT_SECRET);
 
 // ── Public API ────────────────────────────────────────────────────────────────
 export const executeCode = async (language, code, stdin = '') => {
@@ -31,6 +32,12 @@ export const executeCode = async (language, code, stdin = '') => {
       language:     langConfig.language,
       versionIndex: langConfig.versionIndex,
     };
+
+    if (!HAS_JDOODLE_CREDS) {
+      const msg = 'JDoodle credentials not configured. Set JDOODLE_CLIENT_ID and JDOODLE_CLIENT_SECRET in the environment.';
+      console.error('[JDoodle] Missing credentials:', msg);
+      return { output: `Execution service error: ${msg}`, status: 'Error', success: false };
+    }
 
     const response = await axios.post('https://api.jdoodle.com/v1/execute', payload);
 
@@ -52,9 +59,10 @@ export const executeCode = async (language, code, stdin = '') => {
     };
 
   } catch (err) {
-    const msg = err.response?.data?.error || err.message || 'Unknown error';
-    console.error('[JDoodle] Execution error:', msg);
-    return { output: `Execution service error: ${msg}`, status: 'Error', success: false };
+    const status = err.response?.status;
+    const serverMsg = err.response?.data?.error || err.response?.data?.message || err.message || 'Unknown error';
+    console.error(`[JDoodle] Execution error: status=${status} message=${serverMsg}`);
+    return { output: `Execution service error: ${serverMsg}`, status: 'Error', success: false };
   }
 };
 
