@@ -82,27 +82,40 @@ export default function JoinRoom() {
     setError(null);
 
     try {
+      console.log("🔐 Joining room:", roomId, "Protected:", isProtected);
+
       // Validate password if room is protected
       if (isProtected) {
-        await API.post(`/room/validate/${roomId}`, {
+        console.log("📝 Validating password...");
+        const response = await API.post(`/room/validate/${roomId}`, {
           password,
         });
+        console.log("✅ Password validated:", response.data);
       }
 
+      console.log("🚀 Navigating to coding room...");
       // Navigate to the coding room with password if needed
-      navigate(`/codingroom/${roomId}`, {
-        state: {
-          password: isProtected ? password : "",
-        },
-      });
+      setTimeout(() => {
+        navigate(`/codingroom/${roomId}`, {
+          state: {
+            password: isProtected ? password : "",
+          },
+        });
+      }, 500);
     } catch (err) {
-      const errorMessage = err.response?.data?.message || "Failed to join room";
+      console.error("❌ Join error:", err);
+      const errorMessage = 
+        err.response?.data?.message || 
+        err.message || 
+        "Failed to join room. Please try again.";
+      
+      console.error("Error message:", errorMessage);
       setError(errorMessage);
+      setLoading(false);
+      
       toast.error("Error", {
         description: errorMessage,
       });
-    } finally {
-      setLoading(false);
     }
   };
 

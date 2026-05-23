@@ -66,6 +66,7 @@ export default function CodingRoom() {
   // Current code & language tracked here so Run can read it
   const codeRef = useRef("// Write your code here");
   const langRef = useRef("javascript");
+  const joiningTimeoutRef = useRef(null);
 
   // ── Socket lifecycle ──────────────────────────────────────────────
   useEffect(() => {
@@ -74,8 +75,12 @@ export default function CodingRoom() {
       return;
     }
 
+    console.log("🔌 CodingRoom: Initializing socket connection for room:", roomId);
+
     const handleConnect = () => {
+      console.log("✅ CodingRoom: Socket connected");
       setConnected(true);
+      console.log("📤 Emitting join-room event with password:", password ? "***" : "none");
       socket.emit("join-room", {
         roomId,
         username: currentUser.username,
@@ -86,13 +91,17 @@ export default function CodingRoom() {
     // Register listener before connecting to prevent race conditions
     socket.on("connect", handleConnect);
 
-    socket.on("connect_error", () => {
+    socket.on("connect_error", (err) => {
+      console.error("❌ CodingRoom: Connection error:", err);
       setConnected(false);
       setJoining(false);
       setJoinError("Cannot connect to server. Please try again.");
     });
 
-    socket.on("disconnect", () => setConnected(false));
+    socket.on("disconnect", () => {
+      console.log("🔌 CodingRoom: Socket disconnected");
+      setConnected(false);
+    });
 
     // Connect or trigger joining if already connected
     if (socket.connected) {
@@ -103,6 +112,7 @@ export default function CodingRoom() {
 
     // Room joined successfully — server sends load-code & room-info
     socket.on("load-code", ({ code, language }) => {
+      console.log("📝 CodingRoom: Received load-code event");
       const finalCode = code || DEFAULT_CODE[language] || "// Write your code here";
       const finalLang = language || "javascript";
       codeRef.current = finalCode;
@@ -113,26 +123,54 @@ export default function CodingRoom() {
     });
 
     socket.on("load-messages", (msgs) => {
+      console.log("💬 CodingRoom: Received messages:", msgs?.length || 0);
       setInitialMessages(msgs || []);
     });
 
     socket.on("room-users", (usersList) => {
+      console.log("👥 CodingRoom: Received users list:", usersList?.length || 0);
       setRoomUsers(usersList || []);
     });
 
     socket.on("room-info", (info) => {
+      console.log("ℹ️ CodingRoom: Received room-info, stopping join animation");
       setRoomInfo(info);
       setJoining(false);
     });
 
     // Join errors
     socket.on("error", ({ message }) => {
+      console.error("⚠️ CodingRoom: Socket error:", message);
       setJoinError(message);
       setJoining(false);
       toast.error("Failed to join room", {
         description: message,
       });
     });
+
+    // Handle join-room-error specifically
+    socket.on("join-room-error", ({ message }) => {
+      console.error("⚠️ CodingRoom: Join room error:", message);
+      setJoinError(message);
+      setJoining(false);
+      toast.error("Cannot join room", {
+        description: message,
+      });
+    });
+
+    // Timeout: if still joining after 10 seconds, assume connection failed
+    joiningTimeoutRef.current = setTimeout(() => {
+      setJoining((currentJoining) => {
+        if (currentJoining) {
+          console.warn("⏱️ CodingRoom: Join timeout - still joining after 10 seconds");
+          setJoinError("Connection timeout. The server may be unavailable. Please refresh and try again.");
+          toast.error("Join Timeout", {
+            description: "Could not connect to room. Please try again.",
+          });
+        }
+        return false;
+      });
+    }, 10000);
 
     // Collaborator events
     socket.on("user-joined", ({ username }) => {
@@ -150,6 +188,9 @@ export default function CodingRoom() {
     });
 
     return () => {
+      if (joiningTimeoutRef.current) {
+        clearTimeout(joiningTimeoutRef.current);
+      }
       socket.emit("leave-room", { roomId, username: currentUser.username });
       socket.off("connect");
       socket.off("connect_error");
@@ -158,6 +199,7 @@ export default function CodingRoom() {
       socket.off("load-messages");
       socket.off("room-info");
       socket.off("error");
+      socket.off("join-room-error");
       socket.off("user-joined");
       socket.off("user-left");
       socket.off("room-users");
