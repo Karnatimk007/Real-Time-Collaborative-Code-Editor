@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { registerUser } from "../services/authServices";
 import { toast } from "sonner";
 
@@ -10,6 +10,8 @@ function Register() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirect = searchParams.get("redirect");
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -31,7 +33,7 @@ function Register() {
       toast.success("Account created successfully!", {
         description: "Please login with your credentials.",
       });
-      navigate("/login");
+      navigate(redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : "/login");
     } catch (err) {
       const errorMsg = err.response?.data?.message || "Registration failed";
       setError(errorMsg);
@@ -130,7 +132,7 @@ session.<span className="function">on</span>(<span className="string">'userJoin'
           </button>
 
           <p style={{ textAlign: "center", marginTop: "1rem", fontSize: "0.875rem", color: "var(--text-secondary)" }}>
-            Already have an account? <Link to="/login" style={{ color: "var(--accent-primary)" }}>Login</Link>
+            Already have an account? <Link to={redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : "/login"} style={{ color: "var(--accent-primary)" }}>Login</Link>
           </p>
         </form>
       </div>

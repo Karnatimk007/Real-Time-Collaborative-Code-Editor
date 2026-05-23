@@ -48,6 +48,8 @@ export default function JoinRoom() {
           toast.success("Success", {
             description: "Joining room...",
           });
+          // Save empty password to sessionStorage for unprotected room validation
+          sessionStorage.setItem(`room_password_${roomId}`, "");
           // Auto-join unprotected room
           navigate(`/codingroom/${roomId}`, {
             state: {
@@ -96,6 +98,7 @@ export default function JoinRoom() {
       console.log("🚀 Navigating to coding room...");
       // Navigate to the coding room with password if needed
       setTimeout(() => {
+        sessionStorage.setItem(`room_password_${roomId}`, isProtected ? password : "");
         navigate(`/codingroom/${roomId}`, {
           state: {
             password: isProtected ? password : "",

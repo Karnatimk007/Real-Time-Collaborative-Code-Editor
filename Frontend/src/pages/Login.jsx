@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../store/authStore";
 import { toast } from "sonner";
 
@@ -9,13 +9,26 @@ function Login() {
 
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirect = searchParams.get("redirect");
 
   // ✅ Redirect when authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/dashboard");
+      if (redirect) {
+        // If they were trying to access codingroom directly, send them to the join page first
+        let target = redirect;
+        const codingRoomMatch = redirect.match(/^\/codingroom\/(\d{6})/);
+        if (codingRoomMatch) {
+          const roomId = codingRoomMatch[1];
+          target = `/join-room/${roomId}`;
+        }
+        navigate(target);
+      } else {
+        navigate("/dashboard");
+      }
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, redirect]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -99,7 +112,7 @@ function Login() {
           </button>
 
           <p style={{ textAlign: "center", marginTop: "1rem", fontSize: "0.875rem", color: "var(--text-secondary)" }}>
-            Don't have an account? <Link to="/register" style={{ color: "var(--accent-primary)" }}>Register</Link>
+            Don't have an account? <Link to={redirect ? `/register?redirect=${encodeURIComponent(redirect)}` : "/register"} style={{ color: "var(--accent-primary)" }}>Register</Link>
           </p>
         </form>
       </div>

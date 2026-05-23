@@ -46,7 +46,20 @@ export default function CodingRoom() {
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser } = useAuth();
-  const password = location.state?.password || "";
+
+  const passwordFromState = location.state?.password;
+  const passwordFromSession = sessionStorage.getItem(`room_password_${roomId}`);
+
+  // Redirect to join page if accessed directly without state or session validation
+  useEffect(() => {
+    if (passwordFromState === undefined && passwordFromSession === null) {
+      console.log("⚠️ Accessing codingroom directly without validation. Redirecting to join page.");
+      navigate(`/join-room/${roomId}`, { replace: true });
+    }
+  }, [roomId, passwordFromState, passwordFromSession, navigate]);
+
+  // Determine the room password to use
+  const password = passwordFromState !== undefined ? passwordFromState : (passwordFromSession || "");
 
   // ── State ────────────────────────────────────────────────────────
   const [connected, setConnected] = useState(false);
@@ -72,6 +85,11 @@ export default function CodingRoom() {
   useEffect(() => {
     if (!currentUser) {
       navigate("/login");
+      return;
+    }
+
+    // Do not initialize socket if redirecting to join page
+    if (passwordFromState === undefined && passwordFromSession === null) {
       return;
     }
 
@@ -136,6 +154,8 @@ export default function CodingRoom() {
       console.log("ℹ️ CodingRoom: Received room-info, stopping join animation");
       setRoomInfo(info);
       setJoining(false);
+      // Save valid password to sessionStorage for page refreshes
+      sessionStorage.setItem(`room_password_${roomId}`, password);
     });
 
     // Join errors
@@ -143,6 +163,7 @@ export default function CodingRoom() {
       console.error("⚠️ CodingRoom: Socket error:", message);
       setJoinError(message);
       setJoining(false);
+      sessionStorage.removeItem(`room_password_${roomId}`);
       toast.error("Failed to join room", {
         description: message,
       });
@@ -153,6 +174,7 @@ export default function CodingRoom() {
       console.error("⚠️ CodingRoom: Join room error:", message);
       setJoinError(message);
       setJoining(false);
+      sessionStorage.removeItem(`room_password_${roomId}`);
       toast.error("Cannot join room", {
         description: message,
       });
@@ -205,7 +227,7 @@ export default function CodingRoom() {
       socket.off("room-users");
       socket.disconnect();
     };
-  }, [roomId, currentUser, navigate]);
+  }, [roomId, currentUser, navigate, password, passwordFromState, passwordFromSession]);
 
   // ── Track current code/language via callbacks from CodeEditor ──────
   const handleCodeChange = useCallback((newCode) => {
@@ -243,8 +265,9 @@ export default function CodingRoom() {
       description: "Session ended successfully.",
       icon: "👋",
     });
+    sessionStorage.removeItem(`room_password_${roomId}`);
     navigate("/dashboard");
-  }, [navigate]);
+  }, [navigate, roomId]);
 
   // ── Run code ──────────────────────────────────────────────────────
   const handleRun = useCallback(async () => {
