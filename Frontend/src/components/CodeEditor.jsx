@@ -27,7 +27,9 @@ function CodeEditor({ socket, roomId, onCodeChange, onLangChange, defaultCodes, 
   useEffect(() => {
     const handleCodeUpdate = (data) => {
       // Handle both old format (just code string) and new format (object with code and username)
-      const newCode = typeof data === 'string' ? data : data?.code || data;
+      const newCode = typeof data === 'string' 
+        ? data 
+        : (data && typeof data.code === 'string' ? data.code : "");
       const username = typeof data === 'object' ? data?.username : null;
 
       setCode(newCode);
@@ -46,7 +48,9 @@ function CodeEditor({ socket, roomId, onCodeChange, onLangChange, defaultCodes, 
       }
     };
     const handleLoadCode = ({ code: loadedCode, language: loadedLang }) => {
-      const finalCode = loadedCode || (defaultCodes && defaultCodes[loadedLang]) || "// Write your code here";
+      const finalCode = (loadedCode !== undefined && loadedCode !== null)
+        ? loadedCode
+        : ((defaultCodes && defaultCodes[loadedLang]) || "// Write your code here");
       setCode(finalCode);
       onCodeChange?.(finalCode);
 
