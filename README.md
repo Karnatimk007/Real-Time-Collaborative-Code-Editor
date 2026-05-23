@@ -2,7 +2,6 @@
 
 ### ⚡ Code Together. Collaborate Instantly. Build Smarter.
 
-[![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![React](https://img.shields.io/badge/Frontend-React%2018-61dafb?logo=react)](https://react.dev/)
 [![Node.js](https://img.shields.io/badge/Backend-Node.js%20v18-339933?logo=node.js)](https://nodejs.org/)
 [![Socket.io](https://img.shields.io/badge/Realtime-Socket.io%20v4-010101?logo=socket.io)](https://socket.io/)
@@ -96,7 +95,7 @@ Modern distributed software engineering teams, academic pairs, and hackathon squ
 
 ## 🧠 System Architecture
 
-```mermaid
+mermaid
 graph TD
     User([Developer Browser Client]) <-->|HTTPS REST Requests| Express[Express.js App Routing Engine]
     User <-->|WebSocket Persistent Duplex| SocketServer[Socket.io Gateway Relay]
@@ -113,6 +112,7 @@ graph TD
         RouteHandler -->|Secure REST Payload| JDoodle[JDoodle Remote Compiler Sandbox]
     end
 
+---
 
 ## 🔄 Application Workflow
 
@@ -132,6 +132,8 @@ flowchart TD
     J --> M[Trigger Program Compile]
     M -->|Axios Payload| N[Proxy to Remote Isolation Engine]
     N -->|Capture Streams| O[Render Output Context onto Log Canvas]
+
+---
 
 ## 📂 Folder Structure
 real-time-collaborative-code-editor/
@@ -167,6 +169,8 @@ real-time-collaborative-code-editor/
 │   │   ├── App.jsx               # Root application component routing
 │   │   └── main.jsx              # DOM mounting and provider config context
 │   └── package.json
+
+---
 
 ## 🚀 Installation & Setup
 
@@ -215,6 +219,8 @@ npm run dev
 Verification
 Open your browser and navigate to http://localhost:5173 to access the application.
 
+---
+
 ## 📡 API Documentation
 🔐 Authentication Module
 
@@ -223,6 +229,7 @@ POST,/api/auth/register,Open Public Endpoint,Registers a new user into the datab
 POST,/api/auth/login,Open Public Endpoint,Validates credentials and returns an HTTP-only JWT cookie.
 POST,/api/auth/forgot-password,Open Public Endpoint,Sends a temporary reset token via email.
 
+---
 
 ## 💻 Collaboration Room Module
 HTTP Method,Route String,Security Clearances,Functional Context
@@ -230,9 +237,13 @@ POST,/api/room/create,Bearer Token Verification Required,Generates and reserves 
 POST,/api/room/join,Bearer Token Verification Required,Validates room access credentials.
 GET,/api/room/:id,Bearer Token Verification Required,Returns code buffer histories and active user states.
 
+---
+
 ## ▶️ Isolation Engine Compiler Routing
 HTTP Method,Route String,Security Clearances,Functional Context
 POST,/api/execute,Bearer Token Verification Required,Proxies raw code execution blocks to remote runtimes.
+
+---
 
 ## 🧩 Major Modules & Implementations
 🔹 Socket Event Handlers (socketHandler.js)
@@ -247,6 +258,7 @@ chat:message: Manages real-time message routing to ensure instant text synchroni
 🔹 Compilation Adapter Proxy (executorService.js)
 This module handles communication with external compilation engines. It formats incoming source blocks into runtime payloads for target languages (such as Python, Java, or C++), validates input sizes, and cleanly returns execution logs or runtime errors to the workspace output console.
 
+---
 
 ## 🗄️ Database Schema & Models
 👤 User Schema Definition
@@ -257,6 +269,8 @@ This module handles communication with external compilation engines. It formats 
   createdAt:{ type: Date,   default: Date.now }
 }
 
+---
+
 ## 💻 Collaboration Room Schema Definition
 {
   roomId:       { type: String, required: true, unique: true },
@@ -265,6 +279,8 @@ This module handles communication with external compilation engines. It formats 
   participants: [ { type: mongoose.Schema.Types.ObjectId, ref: 'User' } ],
   updatedAt:    { type: Date,   default: Date.now }
 }
+
+---
 
 ## 🛡️ Authentication & Security
 CodeSync implements multiple layer guards designed to safeguard infrastructure components:
@@ -275,13 +291,16 @@ Encrypted Database Footprints: Sensitive parameters are obfuscated using multi-s
 
 Express Rate Limiting Guardrails: Implements sliding request-window interception logic to mitigate brute-force authentication attacks on sensitive login endpoints.
 
+---
 
-##⚡ Performance Optimizations
+## ⚡ Performance Optimizations
 Socket Multi-Cast Segmentation: Server nodes rely entirely on isolated room groups rather than global event broadcasting, preventing data lag as the number of active rooms scales up.
 
 State Store Memoization via Zustand: Replaced high-overhead global re-render routines with selective state subscription hooks to ensure smooth performance during heavy typing sessions.
 
 Asynchronous Database Persistence: Rather than triggering a database write for every single keystroke, code changes are bundled and saved asynchronously using optimized interval checkpoints to reduce server disk load.
+
+---
 
 ## 👨‍👩‍👨 Team Details
 Developed as an advanced full-stack engineering project by:
@@ -292,8 +311,9 @@ Roll Number,Full Legal Name,Primary Strategic Project Responsibilities
 23EG105Q58,Mahesh Karnati
 23EG112C07,CH. Rohith Sai
 
+---
+
 ## 📜 License
-This project is licensed under the terms of the open-source MIT License.
 Copyright (c) 2026 CodeSync Open Source Initiative
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -305,6 +325,16 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
 
 ## 📬 System Footnote
 CodeSync is actively maintained and continually optimized for developer productivity. For security disclosures, architectural questions, or feature requests, please submit an issue through the project's repository dashboard.
