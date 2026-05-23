@@ -61,8 +61,8 @@ function Users({ users = [], roomId = null }) {
         )}
 
         <AnimatePresence>
-          {users.map((user, index) => {
-            const isMe = user === currentUser?.username;
+          {Array.from(new Set(users.filter(u => typeof u === 'string' && u.trim() !== ''))).map((user, index) => {
+            const isMe = user.toLowerCase().trim() === currentUser?.username?.toLowerCase().trim();
             return (
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
