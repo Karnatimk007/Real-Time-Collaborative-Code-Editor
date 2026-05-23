@@ -2,7 +2,12 @@
 
 ### ⚡ Code Together. Collaborate Instantly. Build Smarter.
 
-[![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](#-license)
+<p align="left">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=react,nodejs,express,mongodb,js,vite,git,github" height="65" />
+  </a>
+</p>
+
 [![React](https://img.shields.io/badge/Frontend-React%2018-61dafb?logo=react)](https://react.dev/)
 [![Node.js](https://img.shields.io/badge/Backend-Node.js%20v18-339933?logo=node.js)](https://nodejs.org/)
 [![Socket.io](https://img.shields.io/badge/Realtime-Socket.io%20v4-010101?logo=socket.io)](https://socket.io/)
@@ -380,13 +385,13 @@ CodeSync implements multiple layer guards designed to safeguard infrastructure c
 
 Developed as an advanced full-stack engineering project by **The Code Crafters**:
 
-| Roll Number | Full Legal Name | Primary Strategic Project Responsibilities |
-| --- | --- | --- |
-| **23EG105B52** | **Ritvik Sachin Tanna** | Core Frontend View Interceptors, Component Lifecycle Architecture & Monaco Integration. |
-| **23EG112C46** | **Sasanakota Vineel Krishna** | Core Architecture, REST API Routing, Database Schemas & Authentication Security. |
-| **23EG112D59** | **Yellayolla Swaragini** | Real-Time Systems, Core Socket Engine Setup, Event Handlers & Channel Grouping. |
-| **23EG105Q58** | **Mahesh Karnati** | External Compilation Adapters, Error Serialization & Custom Pipeline Services. |
-| **23EG112C07** | **CH. Rohith Sai** | UX Layout Polish, Component Testing, Edge-case Resolution & UI Performance Refactoring. |
+| Roll Number | Full Legal Name |
+| --- | --- |
+| **23EG105B52** | **Ritvik Sachin Tanna** |
+| **23EG112C46** | **Sasanakota Vineel Krishna** |
+| **23EG112D59** | **Yellayolla Swaragini** |
+| **23EG105Q58** | **Mahesh Karnati** |
+| **23EG112C07** | **CH. Rohith Sai** |
 
 ---
 
