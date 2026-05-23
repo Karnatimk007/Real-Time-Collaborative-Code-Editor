@@ -1,8 +1,3 @@
-Here is your upgraded, comprehensive, production-grade `README.md` for the **Backend** module. This version integrates **Git-compatible Mermaid.js sequence diagrams and state charts** directly into the markdown code block.
-
-You can copy and paste the raw markdown block below directly into your `Backend/README.md` file.
-
-```markdown
 # ⚙️ CodeSync Backend Server Engine — MERN Architecture Documentation
 
 This directory houses the foundational system engineering for the **CodeSync** platform. Built on the Node.js runtime framework utilizing the Express ecosystem, this subsystem orchestrates persistent bi-directional WebSockets, performs stateless authorization interceptor routines, enforces rigid document modeling structures, handles external isolation sandboxed code executions, and manages transactional email alerts.
