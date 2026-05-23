@@ -15,7 +15,7 @@ The live production deployment of the platform can be accessed at:
 A modern, minimalist landing page that communicates the application's core value proposition, featuring an active operational status banner and direct entry vectors into secure programming rooms.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Karnatimk007/Real-Time-Collaborative-Code-Editor/main/Frontend/home.jpg" width="90%" alt="CodeSync Landing Platform Interface" />
+  <img src="https://raw.githubusercontent.com/Karnatimk007/Real-Time-Collaborative-Code-Editor/main/Frontend/src/assets/home.jpg" width="90%" alt="CodeSync Landing Platform Interface" />
 </p>
 
 ---
@@ -24,8 +24,8 @@ A modern, minimalist landing page that communicates the application's core value
 A secure dashboard architecture splitting access paths into isolated layout workflows: credentials checking on the left and dynamic collaboration-room lifecycle management panels on the right.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Karnatimk007/Real-Time-Collaborative-Code-Editor/main/Frontend/register.jpg" width="49%" alt="Secure Gateway Authentication" />
-  <img src="https://raw.githubusercontent.com/Karnatimk007/Real-Time-Collaborative-Code-Editor/main/Frontend/dashboard.jpg" width="49%" alt="Workspace Control Hub Dashboard" />
+  <img src="https://raw.githubusercontent.com/Karnatimk007/Real-Time-Collaborative-Code-Editor/main/Frontend/src/assets/register.jpg" width="49%" alt="Secure Gateway Authentication" />
+  <img src="https://raw.githubusercontent.com/Karnatimk007/Real-Time-Collaborative-Code-Editor/main/Frontend/src/assets/dashboard.jpg" width="49%" alt="Workspace Control Hub Dashboard" />
 </p>
 
 * **Secure Account Provisioning:** User identification mapping, standard email formatting validation layers, and salted password transformations.
@@ -37,7 +37,7 @@ A secure dashboard architecture splitting access paths into isolated layout work
 The primary high-velocity collaborative core workspace pane combining real-time document sync with integrated room communication systems.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Karnatimk007/Real-Time-Collaborative-Code-Editor/main/Frontend/coding.png" width="90%" alt="Real-Time Collaborative Code Canvas View" />
+  <img src="https://raw.githubusercontent.com/Karnatimk007/Real-Time-Collaborative-Code-Editor/main/Frontend/src/assets/coding.png" width="90%" alt="Real-Time Collaborative Code Canvas View" />
 </p>
 
 * **Full-Duplex Editor Buffer:** Embedded Monaco Editor tracking code variations instantly across multi-user environments with built-in language dropdown syntax definitions.
