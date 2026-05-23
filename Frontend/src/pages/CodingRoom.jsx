@@ -48,7 +48,12 @@ export default function CodingRoom() {
   const { currentUser } = useAuth();
 
   const passwordFromState = location.state?.password;
-  const passwordFromSession = sessionStorage.getItem(`room_password_${roomId}`);
+  let passwordFromSession = null;
+  try {
+    passwordFromSession = sessionStorage.getItem(`room_password_${roomId}`);
+  } catch (e) {
+    console.error("Failed to read from sessionStorage:", e);
+  }
 
   // Redirect to join page if accessed directly without state or session validation
   useEffect(() => {
@@ -155,7 +160,11 @@ export default function CodingRoom() {
       setRoomInfo(info);
       setJoining(false);
       // Save valid password to sessionStorage for page refreshes
-      sessionStorage.setItem(`room_password_${roomId}`, password);
+      try {
+        sessionStorage.setItem(`room_password_${roomId}`, password);
+      } catch (e) {
+        console.error("Failed to write to sessionStorage:", e);
+      }
     });
 
     // Join errors
@@ -163,7 +172,11 @@ export default function CodingRoom() {
       console.error("⚠️ CodingRoom: Socket error:", message);
       setJoinError(message);
       setJoining(false);
-      sessionStorage.removeItem(`room_password_${roomId}`);
+      try {
+        sessionStorage.removeItem(`room_password_${roomId}`);
+      } catch (e) {
+        console.error("Failed to remove from sessionStorage:", e);
+      }
       toast.error("Failed to join room", {
         description: message,
       });
@@ -174,7 +187,11 @@ export default function CodingRoom() {
       console.error("⚠️ CodingRoom: Join room error:", message);
       setJoinError(message);
       setJoining(false);
-      sessionStorage.removeItem(`room_password_${roomId}`);
+      try {
+        sessionStorage.removeItem(`room_password_${roomId}`);
+      } catch (e) {
+        console.error("Failed to remove from sessionStorage:", e);
+      }
       toast.error("Cannot join room", {
         description: message,
       });
@@ -265,7 +282,11 @@ export default function CodingRoom() {
       description: "Session ended successfully.",
       icon: "👋",
     });
-    sessionStorage.removeItem(`room_password_${roomId}`);
+    try {
+      sessionStorage.removeItem(`room_password_${roomId}`);
+    } catch (e) {
+      console.error("Failed to remove from sessionStorage:", e);
+    }
     navigate("/dashboard");
   }, [navigate, roomId]);
 

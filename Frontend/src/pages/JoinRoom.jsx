@@ -49,7 +49,11 @@ export default function JoinRoom() {
             description: "Joining room...",
           });
           // Save empty password to sessionStorage for unprotected room validation
-          sessionStorage.setItem(`room_password_${roomId}`, "");
+          try {
+            sessionStorage.setItem(`room_password_${roomId}`, "");
+          } catch (e) {
+            console.error("Failed to write to sessionStorage:", e);
+          }
           // Auto-join unprotected room
           navigate(`/codingroom/${roomId}`, {
             state: {
@@ -64,11 +68,13 @@ export default function JoinRoom() {
         if (err.response?.status === 401 && err.response?.data?.isProtected) {
           setIsProtected(true);
           setRoomValidated(true);
+          setLoading(false); // Enable the join button for password entry
         } else {
           setError(errorMessage);
           toast.error("Error", {
             description: errorMessage,
           });
+          setLoading(false); // Enable the join button on validation error
         }
       } finally {
         setValidating(false);
@@ -98,7 +104,11 @@ export default function JoinRoom() {
       console.log("🚀 Navigating to coding room...");
       // Navigate to the coding room with password if needed
       setTimeout(() => {
-        sessionStorage.setItem(`room_password_${roomId}`, isProtected ? password : "");
+        try {
+          sessionStorage.setItem(`room_password_${roomId}`, isProtected ? password : "");
+        } catch (e) {
+          console.error("Failed to write to sessionStorage:", e);
+        }
         navigate(`/codingroom/${roomId}`, {
           state: {
             password: isProtected ? password : "",
