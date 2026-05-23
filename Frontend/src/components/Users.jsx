@@ -61,28 +61,37 @@ function Users({ users = [], roomId = null }) {
         )}
 
         <AnimatePresence>
-          {users.map((user, index) => (
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              key={user + index}
-              className="flex items-center gap-3 p-3 bg-cyber-800 border border-cyber-700 rounded-lg shadow-sm hover:border-cyber-600 transition-all"
-            >
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-neon-blue to-blue-600 flex items-center justify-center text-white font-bold shrink-0 shadow-md">
-                {user.charAt(0).toUpperCase()}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-gray-200 text-sm font-medium truncate">
-                  {user === currentUser?.username ? "You" : user}
-                </p>
-                <p className="text-[10px] text-cyber-500 flex items-center gap-1 mt-0.5">
-                  <Circle size={8} fill="currentColor" className="text-neon-green" />
-                  Online
-                </p>
-              </div>
-            </motion.div>
-          ))}
+          {users.map((user, index) => {
+            const isMe = user === currentUser?.username;
+            return (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                key={user + index}
+                className={`flex items-center gap-3 p-3 border rounded-lg shadow-sm transition-all ${
+                  isMe
+                    ? "bg-neon-purple/10 border-neon-purple/40 hover:border-neon-purple/60"
+                    : "bg-cyber-800 border-cyber-700 hover:border-cyber-600"
+                }`}
+              >
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold shrink-0 shadow-md ${
+                  isMe ? "bg-gradient-to-br from-neon-purple to-purple-600" : "bg-gradient-to-br from-neon-blue to-blue-600"
+                }`}>
+                  {user.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-gray-200 text-sm font-medium truncate">
+                    {isMe ? `${user} (You)` : user}
+                  </p>
+                  <p className="text-[10px] text-cyber-500 flex items-center gap-1 mt-0.5">
+                    <Circle size={8} fill="currentColor" className="text-neon-green" />
+                    Online
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
         </AnimatePresence>
         
         {users.length === 0 && (

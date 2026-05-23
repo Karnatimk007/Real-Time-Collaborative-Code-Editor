@@ -180,6 +180,7 @@ function CodeEditor({ socket, roomId, onCodeChange, onLangChange, defaultCodes, 
         range: new monaco.Range(position.lineNumber, position.column, position.lineNumber, position.column),
         options: {
           className: `remote-caret cursor-${username}`,
+          cursorClassName: `remote-cursor-line cursor-${username}`,
         }
       };
 
