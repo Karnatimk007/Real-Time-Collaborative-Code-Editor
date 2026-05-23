@@ -1,5 +1,3 @@
-
-```markdown
 # 🚀 CodeSync — Real-Time Collaborative Code Editor
 
 ### ⚡ Code Together. Collaborate Instantly. Build Smarter.
