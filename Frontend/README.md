@@ -4,6 +4,48 @@ This directory houses the user interface and reactive workspace engineering for 
 
 ---
 
+## 📸 Application Interface & Live Preview
+
+The live production deployment of the platform can be accessed at:
+🌐 **Live URL:** [https://real-time-collaborative-code-editor-lime.vercel.app/](https://real-time-collaborative-code-editor-lime.vercel.app/)
+
+---
+
+### 🏠 Platform Landing Page
+A modern, minimalist landing page that communicates the application's core value proposition, featuring an active operational status banner and direct entry vectors into secure programming rooms.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Karnatimk007/Real-Time-Collaborative-Code-Editor/main/Frontend/public/assets/home.jpg" width="90%" alt="CodeSync Landing Platform Interface" />
+</p>
+
+---
+
+### 🔐 Multi-Tenant Authentication & Core Workspace Control Hub
+A secure dashboard architecture splitting access paths into isolated layout workflows: credentials checking on the left and dynamic collaboration-room lifecycle management panels on the right.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Karnatimk007/Real-Time-Collaborative-Code-Editor/main/Frontend/public/assets/register.jpg" width="49%" alt="Secure Gateway Authentication" />
+  <img src="https://raw.githubusercontent.com/Karnatimk007/Real-Time-Collaborative-Code-Editor/main/Frontend/public/assets/dashboard.jpg" width="49%" alt="Workspace Control Hub Dashboard" />
+</p>
+
+* **Secure Account Provisioning:** User identification mapping, standard email formatting validation layers, and salted password transformations.
+* **Granular Session Controls:** Provisions unique 6-digit room identifiers with customized lifecycle duration constraints (5–1440 minutes) and optional cryptographic session passwords.
+
+---
+
+### 💻 Live Real-Time Collaboration Workspace IDE
+The primary high-velocity collaborative core workspace pane combining real-time document sync with integrated room communication systems.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Karnatimk007/Real-Time-Collaborative-Code-Editor/main/Frontend/public/assets/coding.png" width="90%" alt="Real-Time Collaborative Code Canvas View" />
+</p>
+
+* **Full-Duplex Editor Buffer:** Embedded Monaco Editor tracking code variations instantly across multi-user environments with built-in language dropdown syntax definitions.
+* **Presence & Workspace Management:** Displays current workspace connectivity states (`Connected`), active tracking metrics (`1/20 participants`), single-click dynamic token invite links, and native terminal standard-execution hooks (`Run`).
+* **Sidebar Communication Rail:** Toggleable utilities allowing seamless switching between real-time team text channels (featuring emoji integration) and active participant list indexes.
+
+---
+
 ## 🏗️ Core Frontend Architecture & UI Design Patterns
 
 The frontend application follows a declarative component-driven architecture paired with centralized state slices to prevent heavy component re-renders:
@@ -202,13 +244,9 @@ npm run build
 4. **Environment Deployment Mapping:** Inject production configuration values into the deployment panel (e.g., set `VITE_BACKEND_URL` to point to your live cloud server API). The edge engine publishes the codebase instantly across worldwide network points.
 
 ```text
-🌐 Production Client Live URL: [https://codesync-collaborative.yourdomain.com](https://codesync-collaborative.yourdomain.com)
+🌐 Production Client Live URL: [https://real-time-collaborative-code-editor-lime.vercel.app/](https://real-time-collaborative-code-editor-lime.vercel.app/)
 🎨 Frontend Asset Build Status: Passed / Optimized Static Generation Stable
 
 ```
 
 ---
-
-```
-
-```

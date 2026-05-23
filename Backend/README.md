@@ -339,9 +339,8 @@ The production server layer is fully optimized for cloud platform container envi
 4. **Configuration Injection:** Populate the target environment variables panel with your secure credentials (`MONGO_URI`, `JWT_SECRET`, `JDOODLE_CLIENT_ID`, etc.).
 5. **Build Deployment Lifecycle:** The cloud deployment runners build your environment isolated from your frontend assets. They pull precise runtime versions, execute `npm install`, mount your production environment setups, and expose standard public URLs.
 
-```text
-🌐 Production API REST Link:  [https://api.codesync-collaborative.yourdomain.com](https://api.codesync-collaborative.yourdomain.com)
-⚙️ Cloud Server Engine Status: Operational / Health Check Pass (200 OK)
+```
+🌐 Render Link:  [https://real-time-code-editor-as44.onrender.com/api](https://real-time-code-editor-as44.onrender.com/api)
 
 ```
 
@@ -353,11 +352,7 @@ The production server layer is fully optimized for cloud platform container envi
 * **Socket.io Infrastructure:** Real-time bi-directional event orchestration architecture.
 * **Mongoose ODM Engine:** Structural schema definition logic tracking document persistence flows.
 
-```text
+```
 🚀 CodeSync Backend Service Module — Built for scalable, secure, and low-latency real-time collaboration.
-
-```
-
-```
 
 ```
