@@ -262,21 +262,21 @@ function Chat({ socket, roomId, initialMessages = [] }) {
             onClick={() =>
               fileInputRef.current.click()
             }
-            className="text-cyber-500 hover:text-white"
+            className="text-cyber-500 hover:text-white shrink-0 flex items-center justify-center"
           >
             <Paperclip size={18} />
           </button>
-
+ 
           {/* Message Input */}
           <input
             type="text"
             placeholder="Type a message..."
-            className="flex-1 bg-transparent text-sm text-gray-200 outline-none"
+            className="flex-1 bg-transparent text-sm text-gray-200 outline-none min-w-0"
             value={message}
             onChange={handleTypingInput}
             onKeyDown={handleKeyDown}
           />
-
+ 
           {/* Emoji Button */}
           <button
             onClick={() =>
@@ -284,16 +284,16 @@ function Chat({ socket, roomId, initialMessages = [] }) {
                 !showEmojiPicker
               )
             }
-            className="text-cyber-500 hover:text-yellow-400"
+            className="text-cyber-500 hover:text-yellow-400 shrink-0 flex items-center justify-center"
           >
             <Smile size={18} />
           </button>
-
+ 
           {/* Send */}
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={sendMessage}
-            className="bg-purple-600 text-white p-2 rounded-full"
+            className="bg-purple-600 text-white p-2 rounded-full shrink-0 flex items-center justify-center"
           >
             <Send size={16} />
           </motion.button>
