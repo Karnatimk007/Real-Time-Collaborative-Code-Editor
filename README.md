@@ -1,6 +1,6 @@
-# 🚀 CodeSync — Real-Time Collaborative Code Editor
+  CodeSync — Real-Time Collaborative Code Editor
 
-### ⚡ Code Together. Collaborate Instantly. Build Smarter.
+⚡ Code Together. Collaborate Instantly. Build Smarter.
 
 <p align="left">
   <a href="https://skillicons.dev">
@@ -25,14 +25,14 @@ Unlike standalone local text editors, CodeSync implements a highly responsive we
 ### 🧠 Problem Statement
 Modern distributed software engineering teams, academic peers, and hackathon squads struggle with structural lag and context-switching friction during remote synchronization sessions. Relying on screen-sharing software causes high network latency, single-user controls, and fragmented communication loops. CodeSync addresses this by establishing isolated, low-latency development workspaces that support multi-language code compilation alongside a highly synchronized developer-focused text canvas.
 
-### 🌍 Real-World Use Cases
+###  Real-World Use Cases
 * **Pair Programming:** Distributed engineers can execute rapid agile refactoring loops in a shared environment without worrying about asynchronous git branch conflicts.
 * **Technical Interview Assessments:** Enterprise technical recruiters can configure secure code evaluation rooms to monitor an applicant's analytical flow and problem-solving velocity in real-time.
 * **Academic Labs & Coding Bootcamps:** Instructors can easily review student logic and diagnose operational compilation errors interactively across dozens of live student environments.
 
 ---
 
-## 📚 Table of Contents
+##  Table of Contents
 1. [Project Overview](#-project-overview)
 2. [Core Features](#-core-features)
 3. [Tech Stack](#-tech-stack)
